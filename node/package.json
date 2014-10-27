@@ -1,0 +1,9 @@
+{
+  "name": "volvox controller",
+  "description": "iOS controller and OSC output",
+  "version": "0.0.1",
+
+  "dependencies": {
+
+  }
+}

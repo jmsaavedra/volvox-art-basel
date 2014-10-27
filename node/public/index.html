@@ -1,0 +1,58 @@
+<html>
+	<head>
+
+		<title>Momentus IO</title>
+
+		<style type="text/css">
+			#logo {
+				position: absolute;
+				top:0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				margin-top:80px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+		</style>
+
+		<script>
+		var logoURLs = [
+			"/img/fake_logos/logo_0.png",
+			"/img/fake_logos/logo_1.png",
+			"/img/fake_logos/logo_2.png",
+			"/img/fake_logos/logo_3.png",
+			"/img/fake_logos/logo_4.png",
+			"/img/fake_logos/logo_5.png",
+			"/img/fake_logos/logo_6.png",
+			"/img/fake_logos/logo_7.png",
+			"/img/fake_logos/logo_8.png",
+			"/img/fake_logos/logo_9.png",
+			"/img/fake_logos/logo_10.png",
+			"/img/fake_logos/logo_11.png",
+			"/img/fake_logos/logo_12.png",
+			"/img/fake_logos/logo_13.png",
+			"/img/fake_logos/logo_14.png",
+			"/img/fake_logos/logo_15.png",
+			"/img/fake_logos/logo_16.png"
+		];
+
+		function getImageTag() {
+			var img = '<img id="logo" src=\"';
+			var randomIndex = Math.floor(Math.random() * logoURLs.length);
+			img += logoURLs[randomIndex];
+			img += '\" alt=\"Some alt text\"/>';
+			return img;
+		}
+
+		</script>
+
+
+	</head>
+	<body>
+		<!-- <h2>welcome to momentus.io</h2> -->
+		<script type="text/javascript">
+  		document.write(getImageTag());
+		</script>
+	</body>
+</html>

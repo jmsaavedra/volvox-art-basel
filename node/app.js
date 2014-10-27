@@ -9,47 +9,50 @@
 // module dependencies
 //
 */
-var http      = require('http');
-var express   = require('express');
-var path      = require('path');
-var fs        = require('fs');
-var less      = require('less-middleware');
+var http = require('http');
+var io = require('socket.io')(http);
 var colors    = require('colors');
-var busboy    = require('busboy');
-var cookieParser = require('cookie-parser'); //https://www.npmjs.org/package/cookie-parser
-// var expressSession = require('express-session'); //for cookies
-// var cookie    = require('cookie') //https://www.npmjs.org/package/cookie
-// var bodyParser = require('body-parser');
-// var sessions = require("client-sessions"); //https://github.com/mozilla/node-client-sessions
 
 
+/***
+// dropbox directory path!
+//
+*/
+var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE";
 
 /***
 // custom modules
 //
 */
-var Folders   = require('./modules/FolderSync');
-Folders.setup(__dirname);
+var LOCATIONS = require('./modules/DropboxSync');
+LOCATIONS.setup(DropBoxDirectory);
 
 
-
+/***
+// express server + socket setup
+//
+*/
+var app = require('express')();
+app.set('port', process.env.PORT || 3000);
+app.set('view engine', 'jade');
 
 
 
 /***
-// express server setup
+// app routes
 //
 */
-var app = express();
-var port = 55555;
-app.set('port', process.env.PORT || port);
-app.set('views', __dirname + '/views');
-// app.set('view engine', 'ejs');
-app.use(express.static(__dirname+'/public'));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(cookieParser());
-// app.use(expressSession({secret:'somesecrettokenhere'}));
-// app.use(bodyParser());
+var locations = require('./routes/locations');
+var property = require('./routes/single-property');
+
+
+/***
+// HTTP routes
+//
+*/
+
+app.get ( '/' , locations.index(LOCATIONS.all()) );
+// app.get ( '/location/:name', locations.index(LOCATIONS.all));
 
 
 
@@ -62,14 +65,11 @@ http.createServer(app).listen(app.get('port'), function(){
   console.log('  Volvox Client Server Running     '.white.inverse);
   var listeningString = '  Listening on port '+ app.get('port') +"    ";
   console.log(listeningString.cyan.inverse);
-
 });
 
 
-//
-//
-//
-//
+
+
 // /***
 // // LOCALS - global object
 // //
@@ -79,20 +79,3 @@ http.createServer(app).listen(app.get('port'), function(){
 // app.locals.version = PROTOTYPE_VERSION;
 //
 //
-//
-// /***
-// // site routes
-// //
-// */
-// var capture = require('./routes/capture');
-//
-//
-//
-// /***
-// // HTTP routes
-// //
-// */
-// app.get ( '/capture/:id/:user_number' , capture.momentAndUser(Database) );
-// app.get ( '/capture/:id' , capture.moment(Database) );
-// app.post( '/upload'      , capture.upload(Database) );
-// app.get ( '/thanks'      , capture.thanks(Database) );

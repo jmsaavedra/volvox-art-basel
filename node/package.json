@@ -1,9 +1,12 @@
 {
-  "name": "volvox controller",
+  "name": "volvox-controller",
   "description": "iOS controller and OSC output",
   "version": "0.0.1",
-
   "dependencies": {
-
+    "colors": "^1.0.3",
+    "express": "^4.10.0",
+    "jade": "^1.7.0",
+    "node-dir": "^0.1.6",
+    "socket.io": "^1.1.0"
   }
 }

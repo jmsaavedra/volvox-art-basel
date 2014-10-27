@@ -9,7 +9,27 @@
 /* includes and dependencies */
 var path    = require('path');
 var fs      = require('fs');
-var Folders = require('../modules/FolderSync');
+
+
+/***
+// START - load index page
+//
+*/
+var index = function(LOCATIONS){
+  console.log("index received LOCATIONS: ".green);
+  console.log(JSON.stringify(LOCATIONS));
+  return function(req, res){
+
+    res.render('locations/index',
+      { title: 'Douglas Elliman Controller',
+        slug: 'index',
+        locations: LOCATIONS
+      }
+    );
+
+  }
+}
+
 
 
 /***
@@ -17,6 +37,6 @@ var Folders = require('../modules/FolderSync');
 //
 */
 module.exports = {
+  index: index
 
-  //upload: upload
 }

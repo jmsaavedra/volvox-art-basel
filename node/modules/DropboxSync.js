@@ -32,7 +32,7 @@ var setup = function(dropboxDirectory, cb){
 		var thisLoc = {};
 		var thisLocProps = []
 		thisLoc.name = loc.toLowerCase().capitalize();
-		thisLoc.slug = slug(thisLoc.name);
+		thisLoc.slug = slug(thisLoc.name.toLowerCase());
 		thisLoc.id = locId;
 		locId++;
 

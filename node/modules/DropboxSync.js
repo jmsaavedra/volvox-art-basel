@@ -67,7 +67,7 @@ var setup = function(dropboxDirectory, cb){
 
 	}, function(err){
 		if(!err){
-			console.log("dropboxsync setup complete".green);
+			console.log("  DropboxSync setup() complete  ".green.inverse);
 			cb(null, Locations);
 		}
 		else{

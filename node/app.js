@@ -54,11 +54,12 @@ var property = require('./routes/single-property');
 //
 */
 
-app.get ( '/' , admin.index( LOCATIONS.all()) );
-app.get ( '/init', admin.init(DropBoxDirectory));
-// app.get ( '/location/:name', locations.index(LOCATIONS.all));
+app.get ( '/' , admin.index( LOCATIONS ));
+app.get ( '/init', admin.init(DropBoxDirectory, LOCATIONS));
 app.post( '/update', controller.update());
 app.post( '/share', admin.share());
+
+app.get ( '/location/:id', admin.location( LOCATIONS ));
 
 
 /***

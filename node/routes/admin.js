@@ -10,42 +10,23 @@
 var path    = require('path');
 var fs      = require('fs');
 
-var dropbox = require('../modules/DropboxSync');
 
 /***
 // INIT
 // - re-setup the dropbox folder sync. return master JSON object.
 //
 */
-var init = function(dropboxDir){
+var init = function(dropboxDir, LOCATIONS){
 
   return function(req, res){
-    dropbox.setup(dropboxDir, function(e, locations){
-      console.log("LOCATION INITED: ".green);
-      console.log(JSON.stringify(locations, null, '\t'));
+    console.log("/init requested".cyan);
+    LOCATIONS.setup(dropboxDir, function(e, locations){
+      //console.log("LOCATION INITED: ".green);
+      //console.log(JSON.stringify(locations, null, '\t'));
       res.set('Content-Type', 'application/json');
       res.end(JSON.stringify(locations,null,'\t'));
       //res.send(JSON.stringify(locations,null,'\t'));
     });
-  }
-}
-
-
-/***
-// INDEX
-//
-// - what is served at the GET '/' route
-*/
-var index = function(LOCATIONS){
-
-  return function(req, res){
-
-    res.render('locations/index',
-      { title: 'Douglas Elliman Controller',
-        slug: 'index',
-        locations: LOCATIONS
-      }
-    );
   }
 }
 
@@ -64,12 +45,54 @@ var share = function(){
 
 
 /***
+// INDEX
+//
+// - what is served at the GET '/' route
+*/
+var index = function(LOCATIONS){
+
+  var allLocs = LOCATIONS.all();
+  return function(req, res){
+
+    res.render('locations/index',
+      { title: 'Douglas Elliman Controller',
+        slug: 'index',
+        locations: allLocs
+      }
+    );
+  }
+}
+
+
+
+/***
+// INDEX
+//
+// - what is served at the GET '/' route
+*/
+var location = function(LOCATIONS){
+
+  var allLocs = LOCATIONS.all();
+  return function(req, res){
+
+    res.render('locations/index',
+      { title: 'Douglas Elliman Controller',
+        slug: 'index',
+        locations: allLocs
+      }
+    );
+  }
+}
+
+
+/***
 // MODULE EXPORTS
 //
 */
 module.exports = {
   init: init,
+  share: share,
   index: index,
-  share: share
+  location: location
 
 }

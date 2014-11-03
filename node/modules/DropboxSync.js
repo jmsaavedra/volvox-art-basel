@@ -43,7 +43,7 @@ var setup = function(dropboxDirectory, cb){
 			var thisProp = {};
 			thisProp.dir = dropboxDirectory+"/"+loc+"/"+prop;
 			thisProp.name = prop.toLowerCase().capitalize();
-			thisProp.slug = slug(thisProp.name);
+			thisProp.slug = slug(thisProp.name.toLowerCase());
 			thisProp.id = propId;
 			var imgs = _.without(fs.readdirSync(thisProp.dir), "info.txt");
 			imgs.forEach(function(img, i){

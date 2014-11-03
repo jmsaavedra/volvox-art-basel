@@ -34,7 +34,7 @@ var setup = function(dropboxDirectory, cb){
 		var thisLocProps = []
 		thisLoc.name = loc.toLowerCase().capitalize();
 		thisLoc.folder = loc;
-		thisLoc.slug = slug(thisLoc.name.toLowerCase());
+		// thisLoc.slug = slug(thisLoc.name.toLowerCase());
 		thisLoc.id = "loc_"+locId.toString();
 		locId++;
 
@@ -46,7 +46,7 @@ var setup = function(dropboxDirectory, cb){
 			thisProp.dir = dropboxDirectory+"/"+loc+"/"+prop;
 			thisProp.name = prop.toLowerCase().capitalize();
 			thisProp.folder = prop;
-			thisProp.slug = slug(thisProp.name.toLowerCase());
+			// thisProp.slug = slug(thisProp.name.toLowerCase());
 			thisProp.parent_id = "loc_"+(locId-1);
 			thisProp.parent_name = loc;
 			thisProp.id = "prop_"+propId.toString();

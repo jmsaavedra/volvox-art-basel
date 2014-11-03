@@ -15,7 +15,7 @@ var fs      = require('fs');
 // - re-setup the dropbox folder sync. return master JSON object.
 //
 */
-var init = function( LOCATIONS, dropboxDir ){
+var init = function( LOCATIONS, dropboxDir, OSC ){
 
   return function(req, res){
     console.log("/init requested".cyan);
@@ -46,11 +46,21 @@ var init = function( LOCATIONS, dropboxDir ){
   }
 
 */
-var update = function(LOCATIONS){
+var update = function(LOCATIONS, OSC){
 
   var allLocs = LOCATIONS.all();
 
   return function(req, res){
+
+    //get screen from req.query
+    var screen = 1;
+    var type = "something";// get from req.query
+    var location = "other";// get from req.query
+    OSC.send(screen, type, location, function(addr, type, name){
+      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+    })
+
+
     res.status(200).send("hit /update POST route")
   }
 }
@@ -67,12 +77,60 @@ var update = function(LOCATIONS){
 	email: (string) “email_addr”
 
 */
-var share = function(LOCATIONS){
+var share = function(LOCATIONS, OSC){
+
+  var allLocs = LOCATIONS.all();
+  return function(req, res){
+    //get screen from req.query
+    var screen = 1;
+    OSC.send(screen, "share", 0, function(addr, type, name){
+      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+    })
+
+    res.status(200).send("hit /share POST route")
+  }
+}
+
+/***
+// ABOUT
+//
+*/
+var about = function(LOCATIONS, OSC){
 
   var allLocs = LOCATIONS.all();
 
   return function(req, res){
-    res.status(200).send("hit /share POST route")
+
+    //get screen from req.query
+    var screen = 1;
+    OSC.send(screen, "about", 0, function(addr, type, name){
+      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+    })
+
+
+    res.status(200).send("hit /about")
+  }
+}
+
+/***
+// LIKE
+//
+*/
+var like = function(LOCATIONS, OSC){
+
+  var allLocs = LOCATIONS.all();
+
+  return function(req, res){
+
+    //get screen from req.query
+    var screen = 1;
+    var property = req.params.id;
+    OSC.send(screen, "like", property, function(addr, type, name){
+      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+    })
+
+
+    res.status(200).send("hit /like")
   }
 }
 
@@ -86,5 +144,7 @@ var share = function(LOCATIONS){
 module.exports = {
   init: init,
   update: update,
-  share: share
+  share: share,
+  like: like,
+  about: about
 }

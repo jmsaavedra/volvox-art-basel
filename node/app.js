@@ -56,14 +56,17 @@ var client = require('./routes/client');
 //
 */
 
-app.get ( '/'         , admin.index( LOCATIONS ));
-app.get ( '/init'     , client.init( LOCATIONS, DropBoxDirectory ));
-app.post( '/update'   , client.update( LOCATIONS ));
-app.post( '/share'    , client.share( LOCATIONS ));
+app.get ( '/'         , admin.index( LOCATIONS, OSC ));
+app.get ( '/init'     , client.init( LOCATIONS, DropBoxDirectory, OSC ));
+app.post( '/update'   , client.update( LOCATIONS, OSC ));
+app.post( '/share'    , client.share( LOCATIONS, OSC ));
+app.get ( '/about'    , client.about( LOCATIONS, OSC ));
+app.get ( '/like/:id' , client.like( LOCATIONS, OSC));
 
-app.get ( '/location/:id', admin.location( LOCATIONS ));
-app.get ( '/property/:id', admin.property( LOCATIONS ));
-app.get ( '/property/:id/:imgid', admin.image( LOCATIONS ));
+
+app.get ( '/location/:id', admin.location( LOCATIONS, OSC ));
+app.get ( '/property/:id', admin.property( LOCATIONS, OSC ));
+app.get ( '/property/:id/:imgid', admin.image( LOCATIONS, OSC ));
 
 
 /***

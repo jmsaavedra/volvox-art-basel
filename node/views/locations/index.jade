@@ -10,26 +10,38 @@ block content
 
   if slug == "index"
     //---------------------------------------------------- index -------
+    div.pure-menu.pure-menu-open.pure-menu-horizontal
+      ul
+        li
+        li.pure-menu-disabled: a(href='/').pure-button Back
     p Home
     h1 Locations
-    #locations
-      for location in locations
-        //- include location
-        hr
-        h2: a(href='/location/'+location.id).id= location.name
+    div.pure-menu.pure-menu-open
+      ul
+        for location in locations
+          //- include location
+          hr
+          li: a(href='/location/'+location.id).id= location.name
     br
 
 
 
   else if slug == "location"
     //---------------------------------------------------- location -------
-    h1 Properties in #{location.name}
-    h3: a(href='/') BACK
-    #locations
-      for property in location.properties
-        hr
-        h2:  a(href='/property/'+property.id).id= property.name
-        //- for property in locations
+
+    div.pure-menu.pure-menu-open.pure-menu-horizontal
+      ul
+        li
+        li: a(href='/').pure-button Back
+    p Properties in
+    h1 #{location.name}
+
+    div.pure-menu.pure-menu-open
+      ul
+        for property in location.properties
+          hr
+          li:  a(href='/property/'+property.id).id= property.name
+          //- for property in locations
     br
 
 
@@ -38,9 +50,12 @@ block content
     //---------------------------------------------------- property -------
 
     //- h5 !{JSON.stringify(property)}
-
-    h1 Property: #{property.name}
-    h3: a(href='/location/'+property.parent_id) BACK
+    div.pure-menu.pure-menu-open.pure-menu-horizontal
+      ul
+        li: a(href='/like/'+property.folder).pure-button Like
+        li: a(href='/location/'+property.parent_id).pure-button Back
+    p Property
+    h1 #{property.name}
     hr
 
     h3 Images

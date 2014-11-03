@@ -10,7 +10,6 @@
 var path    = require('path');
 var fs      = require('fs');
 var _       = require('underscore');
-var OSC     = require('../modules/OscController')
 
 
 
@@ -21,7 +20,7 @@ var OSC     = require('../modules/OscController')
 //
 // - what is served at the GET '/' route
 */
-var index = function(LOCATIONS){
+var index = function(LOCATIONS, OSC){
 
   return function(req, res){
 
@@ -50,7 +49,7 @@ var index = function(LOCATIONS){
 //
 // - GET /location/:id
 */
-var location = function(LOCATIONS){
+var location = function(LOCATIONS, OSC){
 
   return function(req, res){
 
@@ -80,7 +79,7 @@ var location = function(LOCATIONS){
 //
 // - GET /location/:id
 */
-var property = function(LOCATIONS){
+var property = function(LOCATIONS, OSC){
 
   return function(req, res){
 
@@ -117,7 +116,7 @@ var property = function(LOCATIONS){
 //
 // - GET /location/:id
 */
-var image = function(LOCATIONS){
+var image = function(LOCATIONS, OSC){
 
   return function(req, res){
 

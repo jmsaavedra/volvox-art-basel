@@ -14,7 +14,7 @@ var slug = require('slug');
 
 var Locations = [];
 var Properties = [];
-
+var UrlBase = "http://localhost:8080/"
 
 /***
 // setup
@@ -45,7 +45,11 @@ var setup = function(dropboxDirectory, cb){
 			thisProp.name = prop.toLowerCase().capitalize();
 			thisProp.slug = slug(thisProp.name);
 			thisProp.id = propId;
-			thisProp.img = _.without(fs.readdirSync(thisProp.dir), "info.txt");
+			var imgs = _.without(fs.readdirSync(thisProp.dir), "info.txt");
+			imgs.forEach(function(img, i){
+				imgs[i] = UrlBase+loc+"/"+prop+"/"+imgs[i];
+			})
+			thisProp.img = imgs;
 			//thisProp.img = _.without(fs.readdirSync(thisProp.dir+"/"+thisProp.name), "info.txt");
 			thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
 			propId ++;

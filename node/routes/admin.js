@@ -13,7 +13,8 @@ var fs      = require('fs');
 var dropbox = require('../modules/DropboxSync');
 
 /***
-// INIT - load index page
+// INIT
+// - re-setup the dropbox folder sync. return master JSON object.
 //
 */
 var init = function(dropboxDir){
@@ -29,9 +30,11 @@ var init = function(dropboxDir){
   }
 }
 
+
 /***
-// INIT - load index page
+// INDEX
 //
+// - what is served at the GET '/' route
 */
 var index = function(LOCATIONS){
 
@@ -46,6 +49,12 @@ var index = function(LOCATIONS){
   }
 }
 
+
+/***
+// SHARE
+//
+// - what'll happen after POST to '/share'
+*/
 var share = function(){
 
   return function(req, res){

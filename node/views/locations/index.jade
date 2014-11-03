@@ -1,18 +1,56 @@
 
 extends ../layout
 
-if slug == 'index'
-  block content
+block content
+
+
+  //- h3 slug: #{slug}
+  //- h3 !{JSON.stringify(locations)}
+
+
+  if slug == "index"
+    //---------------------------------------------------- index -------
+    p Home
     h1 Locations
     #locations
       for location in locations
-        include location
+        //- include location
+        hr
+        h2: a(href='/location/'+location.id).id= location.name
+    br
+
+
+
+  else if slug == "location"
+    //---------------------------------------------------- location -------
+    h1 Properties in #{location.name}
+    h3: a(href='/') BACK
+    #locations
+      for property in location.properties
+        hr
+        h2:  a(href='/property/'+property.id).id= property.name
+        //- for property in locations
+    br
+
+
+
+  else if slug == "property"
+    //---------------------------------------------------- property -------
+
+    //- h5 !{JSON.stringify(property)}
+
+    h1 Property: #{property.name}
+    h3: a(href='/location/'+property.parent_id) BACK
     hr
 
-else if slug == 'location'
-  block content
-    h1 Property
-    #properties
-      for property in properties
-        include location
+    h3 Images
+    div.imagetable
+      for image in property.img
+        //- h6 #{image.url}
+        a(href='/property/'+property.id+'/'+image.id): img(src=image.url width="250px")
+
     hr
+
+    h3 Notes
+    div.info
+      p.info #{property.info}

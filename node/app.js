@@ -10,7 +10,6 @@
 //
 */
 var http = require('http');
-var io = require('socket.io')(http);
 var colors    = require('colors');
 var express   = require('express');
 
@@ -27,6 +26,9 @@ var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATION
 */
 var LOCATIONS = require('./modules/DropboxSync');
 LOCATIONS.setup(DropBoxDirectory, function(){});
+
+var OSC = require('./modules/OscController');
+OSC.setup();
 
 
 /***
@@ -45,8 +47,8 @@ app.set('view engine', 'jade');
 //
 */
 var admin = require('./routes/admin');
-var controller = require('./routes/controller');
-var property = require('./routes/single-property');
+var client = require('./routes/client');
+
 
 
 /***
@@ -54,12 +56,14 @@ var property = require('./routes/single-property');
 //
 */
 
-app.get ( '/' , admin.index( LOCATIONS ));
-app.get ( '/init', admin.init(DropBoxDirectory, LOCATIONS));
-app.post( '/update', controller.update());
-app.post( '/share', admin.share());
+app.get ( '/'         , admin.index( LOCATIONS ));
+app.get ( '/init'     , client.init( LOCATIONS, DropBoxDirectory ));
+app.post( '/update'   , client.update( LOCATIONS ));
+app.post( '/share'    , client.share( LOCATIONS ));
 
 app.get ( '/location/:id', admin.location( LOCATIONS ));
+app.get ( '/property/:id', admin.property( LOCATIONS ));
+app.get ( '/property/:id/:imgid', admin.image( LOCATIONS ));
 
 
 /***

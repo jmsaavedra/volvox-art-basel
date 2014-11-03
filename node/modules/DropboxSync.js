@@ -8,13 +8,12 @@
 var fs 	= require('fs');
 var dir = require('node-dir');
 var _		= require('underscore');
-var path = require('path');
 var async = require('async');
 var slug = require('slug');
 
 var Locations = [];
 var Properties = [];
-var UrlBase = "http://localhost:8080/"
+
 
 /***
 // setup
@@ -34,6 +33,7 @@ var setup = function(dropboxDirectory, cb){
 		var thisLoc = {};
 		var thisLocProps = []
 		thisLoc.name = loc.toLowerCase().capitalize();
+		thisLoc.folder = loc;
 		thisLoc.slug = slug(thisLoc.name.toLowerCase());
 		thisLoc.id = "loc_"+locId.toString();
 		locId++;
@@ -45,11 +45,14 @@ var setup = function(dropboxDirectory, cb){
 			var thisProp = {};
 			thisProp.dir = dropboxDirectory+"/"+loc+"/"+prop;
 			thisProp.name = prop.toLowerCase().capitalize();
+			thisProp.folder = prop;
 			thisProp.slug = slug(thisProp.name.toLowerCase());
+			thisProp.parent_id = "loc_"+(locId-1);
+			thisProp.parent_name = loc;
 			thisProp.id = "prop_"+propId.toString();
 			var imgs = _.without(fs.readdirSync(thisProp.dir), "info.txt");
 			imgs.forEach(function(img, i){
-				imgs[i] = {id: "img_"+imgId.toString(), url: UrlBase+loc+"/"+prop+"/"+imgs[i]};
+				imgs[i] = {id: "img_"+imgId.toString(), url: "/"+loc+"/"+prop+"/"+imgs[i]};
 				imgId++;
 			})
 			thisProp.img = imgs;
@@ -89,6 +92,22 @@ var all = function(){
 	return Locations
 }
 
+
+var getPropertyById = function(id, cb){
+	var property = null;
+	async.eachSeries(Properties, function(prop, _callback){
+		if (prop.id === id) property = prop;
+		_callback();
+	}, function(err){
+		if(!err){
+			//console.log("found property: ".white.inverse+property);
+			if(property!=null) cb(null, property)
+			else cb(null, null);
+		}
+		else cb(err, null);
+	});
+}
+
 String.prototype.capitalize = function() {
     // return this.charAt(0).toUpperCase() + this.slice(1);
 		return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
@@ -101,4 +120,5 @@ String.prototype.capitalize = function() {
 module.exports = {
 	all: all,
 	setup: setup,
+	getPropertyById: getPropertyById
 }

@@ -10,39 +10,10 @@
 var path    = require('path');
 var fs      = require('fs');
 var _       = require('underscore');
+var OSC     = require('../modules/OscController')
 
 
-/***
-// INIT
-// - re-setup the dropbox folder sync. return master JSON object.
-//
-*/
-var init = function(dropboxDir, LOCATIONS){
 
-  return function(req, res){
-    console.log("/init requested".cyan);
-    LOCATIONS.setup(dropboxDir, function(e, locations){
-      //console.log("LOCATION INITED: ".green);
-      //console.log(JSON.stringify(locations, null, '\t'));
-      res.set('Content-Type', 'application/json');
-      res.end(JSON.stringify(locations,null,'\t'));
-      //res.send(JSON.stringify(locations,null,'\t'));
-    });
-  }
-}
-
-
-/***
-// SHARE
-//
-// - what'll happen after POST to '/share'
-*/
-var share = function(){
-
-  return function(req, res){
-    res.status(200).send("hit share route");
-  }
-}
 
 
 /***
@@ -52,8 +23,16 @@ var share = function(){
 */
 var index = function(LOCATIONS){
 
-  var allLocs = LOCATIONS.all();
   return function(req, res){
+
+    var allLocs = LOCATIONS.all();
+
+    console.log('GET index '.blue); //JSON.stringify(allLocs));
+
+    OSC.send(1, "home", 0, function(addr, type, name){
+      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+    })
+
 
     res.render('locations/index',
       { title: 'Douglas Elliman Controller',
@@ -67,35 +46,115 @@ var index = function(LOCATIONS){
 
 
 /***
-// INDEX
+// LOCATION
 //
-// - what is served at the GET '/' route
+// - GET /location/:id
 */
 var location = function(LOCATIONS){
 
-  var allLocs = LOCATIONS.all();
   return function(req, res){
-    var locId = req.params.id;
-    console.log(allLocs[locId]);
-    console.log('get loc: '+locId);
+
+    var allLocs = LOCATIONS.all();
+    var id = req.params.id.toString();
+    var locId = parseInt(id.split("_")[1]);
+
+    console.log('GET loc: '.blue+id +" : "+ JSON.stringify(allLocs[locId].name));
+
+    var location = allLocs[locId].folder.toString();
+    OSC.send(1, "location", location, function(addr, type, name){
+      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+    })
+
+
     res.render('locations/index',
       { title: 'Douglas Elliman Controller',
         slug: 'location',
-        locations: allLocs[locId]
+        location: allLocs[locId]
       }
     );
   }
 }
 
+/***
+// PROPERTY
+//
+// - GET /location/:id
+*/
+var property = function(LOCATIONS){
+
+  return function(req, res){
+
+    var allLocs = LOCATIONS.all();
+    var id = req.params.id.toString();
+
+    LOCATIONS.getPropertyById(id, function(e, property){
+
+      console.log('GET property: '.blue+id +" : "+ JSON.stringify(property.name));
+
+      // screen, type, name, cb
+      var location = property.parent_name.toString() + "/" + property.folder.toString();
+      OSC.send(1, "property", location, function(addr, type, name){
+        console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+      })
+
+
+      res.render('locations/index',
+        { title: 'Douglas Elliman Controller',
+          slug: 'property',
+          property: property
+        }
+      );
+
+    });
+    //var locId = parseInt(id.split("_")[1]);
+  }
+}
+
+
+
+/***
+// IMAGE
+//
+// - GET /location/:id
+*/
+var image = function(LOCATIONS){
+
+  return function(req, res){
+
+    var allLocs = LOCATIONS.all();
+    var id = req.params.id.toString();
+    var imgid = req.params.imgid.toString();
+
+    console.log('GET img: '.blue+imgid);
+
+    LOCATIONS.getPropertyById(id, function(e, property){
+      var thisImg = new Object(_.where(property.img, {id: imgid})[0]);
+      console.log("thisImg: "+JSON.stringify(thisImg));
+            //(screen, type, name, cb)
+      OSC.send(1, "image", thisImg.url.toString(),function(addr, type, name){
+        console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+      })
+
+      res.render('locations/index',
+        { title: 'Douglas Elliman Controller',
+          slug: 'property',
+          property: property
+        }
+      );
+
+    });
+    //var locId = parseInt(id.split("_")[1]);
+  }
+}
 
 /***
 // MODULE EXPORTS
 //
 */
 module.exports = {
-  init: init,
-  share: share,
   index: index,
-  location: location
+  location: location,
+  property: property,
+  image: image
 
 }

@@ -22,6 +22,7 @@ var UrlBase = "http://localhost:8080/"
 */
 var setup = function(dropboxDirectory, cb){
 	//TODO: query dropbox folder with fs, populate with that
+	Locations = [];
 	var propId = 0;
 	var locId = 0;
 

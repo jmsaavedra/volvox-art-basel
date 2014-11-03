@@ -9,6 +9,7 @@
 /* includes and dependencies */
 var path    = require('path');
 var fs      = require('fs');
+var _       = require('underscore');
 
 
 /***
@@ -74,11 +75,13 @@ var location = function(LOCATIONS){
 
   var allLocs = LOCATIONS.all();
   return function(req, res){
-
+    var locId = req.params.id;
+    console.log(allLocs[locId]);
+    console.log('get loc: '+locId);
     res.render('locations/index',
       { title: 'Douglas Elliman Controller',
-        slug: 'index',
-        locations: allLocs
+        slug: 'location',
+        locations: allLocs[locId]
       }
     );
   }

@@ -25,6 +25,7 @@ var setup = function(dropboxDirectory, cb){
 	Locations = [];
 	var propId = 0;
 	var locId = 0;
+	var imgId = 0;
 
 	//get all locations from dropbox top level
 	var locs = _.sortBy(_.without(fs.readdirSync(dropboxDirectory), ".DS_Store"), function(name){return name});
@@ -34,7 +35,7 @@ var setup = function(dropboxDirectory, cb){
 		var thisLocProps = []
 		thisLoc.name = loc.toLowerCase().capitalize();
 		thisLoc.slug = slug(thisLoc.name.toLowerCase());
-		thisLoc.id = locId;
+		thisLoc.id = "loc_"+locId.toString();
 		locId++;
 
 		//get properties for this loc
@@ -45,10 +46,11 @@ var setup = function(dropboxDirectory, cb){
 			thisProp.dir = dropboxDirectory+"/"+loc+"/"+prop;
 			thisProp.name = prop.toLowerCase().capitalize();
 			thisProp.slug = slug(thisProp.name.toLowerCase());
-			thisProp.id = propId;
+			thisProp.id = "prop_"+propId.toString();
 			var imgs = _.without(fs.readdirSync(thisProp.dir), "info.txt");
 			imgs.forEach(function(img, i){
-				imgs[i] = UrlBase+loc+"/"+prop+"/"+imgs[i];
+				imgs[i] = {id: "img_"+imgId.toString(), url: UrlBase+loc+"/"+prop+"/"+imgs[i]};
+				imgId++;
 			})
 			thisProp.img = imgs;
 			//thisProp.img = _.without(fs.readdirSync(thisProp.dir+"/"+thisProp.name), "info.txt");

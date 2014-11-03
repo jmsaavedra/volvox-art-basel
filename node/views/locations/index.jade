@@ -1,9 +1,18 @@
 
 extends ../layout
 
-block content
-  h1 Locations
-  #locations
-    for location in locations
-      include location
-  hr
+if slug == 'index'
+  block content
+    h1 Locations
+    #locations
+      for location in locations
+        include location
+    hr
+
+else if slug == 'location'
+  block content
+    h1 Property
+    #properties
+      for property in properties
+        include location
+    hr

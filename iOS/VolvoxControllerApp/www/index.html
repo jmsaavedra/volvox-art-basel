@@ -13,23 +13,33 @@
         <div id="view"></div>
 
         <!-- Templates -->
-        <script type="text/html" id="tpl-locations">
+        <script type="text/html" id="tpl-list-locations">
             <header>
                 <p class="header_title"><%= header_title %></p>
             </header>
             <div class="body">
+                <% _.each(list_locations, function(item) { %>
+                    <li>
+                        <a href="/#/cities/<%= item.name %>"><%= item.name %></a>
+                    </li>
+                <% }); %>
             </div>
         </script>
 
-        <script type="text/html" id="tpl-sublocation">
+        <script type="text/html" id="tpl-list-props">
             <header>
                 <p class="header_title"><%= header_title %></p>
             </header>
             <div class="body">
+                <% _.each(list_properties, function(item) { %>
+                    <li>
+                        <a href="<% window.location.hash %>"><%= item.name %></a>
+                    </li>
+                <% }); %>
             </div>
         </script>
 
-        <script type="text/html" id="tpl-resort">
+        <script type="text/html" id="tpl-prop-detail">
             <header>
                 <p class="header_title"><%= header_title %></p>
             </header>

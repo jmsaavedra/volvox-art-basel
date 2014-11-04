@@ -1,76 +1,132 @@
 /* Your code starts here */
 
+// GLOBAL FOR CLIENT =================================//
+var CLIENT = {
+    session_id: '',
+    server_address: 'http://localhost:8080',
+    page_id: 0,
+    screen_id: 1,
+    favorites: []
+};
+//====================================================//
+
 var app = app || {};
 
 app.main = (function() {
-    var channel = 1;
+    var dataFromServer = {};
+    var _compiled;
+    var _template;
+    var _objData;
     var init = function() {
         // app starts running here
         // attach fastClick
         FastClick.attach(document.body);
-        // re-route
-        window.location.hash = '/locations';
+        // init localStorage
+        initLS();
+        // Call server
+        initServerCall();
+        // re-route to default page: locations
+        window.location.hash = '/cities';
         hashListener();
+    };
+
+    var initLS = function() {
+        if (localStorage['app'] === undefined) { // if app is initiated for the first time
+            // pull from localStorage
+            localStorage['app'] = JSON.stringify(CLIENT);
+        } else {
+
+        }
+    };
+
+    var initServerCall = function() {
+        $.get(CLIENT.server_address + '/init', function(d) {
+            if (d.length > 0) {
+                app.main.dataFromServer = d;
+            }
+        });
     };
 
     var hashListener = function() {
         routie({
             // all locations
-            '/locations': function() {
-                console.log('Page: locations');
-                render(channel, {
-                    tpl: 'tpl-locations',
-                    header: 'Location'
+            '/cities': function() {
+                console.log('Page: cities');
+                render({
+                    tpl: 'tpl-list-locations',
+                    page: 'locations',
+                    header: 'Locations'
+                }, function() { // callback
+                    app.main._compiled = _.template(app.main._template, {
+                        header_title: app.main._objData.header,
+                        list_locations: app.main.dataFromServer
+                    });
+                    $('#view').html(app.main._compiled);
                 });
             },
-            '/locations/:place': function(place) {
-                console.log('Page: locations/' + place);
-                render(channel, {
-                    tpl: 'tpl-place',
-                    header: place,
-                    place: place,
+            '/cities/:city': function(city) {
+                // show list of properties in that city
+                console.log('Page: ' + city);
+                render({
+                    tpl: 'tpl-list-props',
+                    header: city,
+                    page: city, // ex: south florida
                     back: true
+                }, function() {
+                    app.main._compiled = _.template(app.main._template, {
+                        header_title: app.main._objData.header,
+                        list_properties: app.main.dataFromServer[getIndexByName(city)].properties
+                    });
+                    $('#view').html(app.main._compiled);
                 });
             },
-            '/locations/:place/:resort': function(place, resort) {
-                console.log('Page: locations/' + place + '/' + resort);
-                render(channel, {
-                    tpl: 'tpl-resort',
-                    header: resort,
-                    place: place,
-                    resort: resort,
+            '/cities/:city/:property': function(city, property) {
+                // show detail page of property
+                console.log('Page: ' + property);
+                render({
+                    tpl: 'tpl-prop-detail',
+                    header: property,
+                    page: property, // ex: Park Grove
                     back: true
+                }, function() {
+                    var cityIndex = getIndexByName(city);
+                    var propertyIndex = getIndexByName(city, property);
+                    app.main._compiled = _.template(app.main._template, {
+                        header_title: app.main._objData.header,
+                        img: app.main.dataFromServer[cityIndex].properties[propertyIndex],
+                        note: ''
+                    });
+                    $('#view').html(app.main._compiled);
                 });
             },
             '/share': function() {
-
+                console.log('Page: /share');
+                render({
+                    tpl: 'tpl-share',
+                    header: 'Share',
+                    page: 'share',
+                    back: true
+                });
             }
         });
     };
 
-    var render = function(n, obj) {
-        //
-        var template = $('#' + obj.tpl).html(),
-            compiled = _.template(template, {
-                header_title: obj.header
+    var render = function(obj, callback) {
+        // send information to server
+        $.post(CLIENT.server_address + '/update', CLIENT, function(e) {
+            // console.log(e);
+            $(window).on('ajaxSuccess', function() {
+                console.log('-----ajax Success');
+                $(this).off('ajaxSuccess');
+                app.main._objData = obj;
+                app.main._template = $('#' + obj.tpl).html();
+                if (callback !== undefined) {
+                    callback();
+                }
             });
-        //
-        $.ajax({
-            url: 'http://apon.local:3000/getLocation',
-            data: {
-                place: obj.place || null,
-                resort: obj.resort || null
-            },
-            success: function() {
-                $('#view').html(compiled);
-            },
-            error: function() {
-                $('#view').html(compiled);
-                // alert('ajax error');
-            }
+
+            attachEvents();
         });
-        //
-        attachEvents();
     };
 
     var attachEvents = function() {
@@ -89,13 +145,33 @@ app.main = (function() {
     };
 
     return {
-        init: init
+        init: init,
+        dataFromServer: dataFromServer,
+        initServerCall: initServerCall,
+        _compiled: _compiled,
+        _template: _template,
+        _objData: _objData
     };
 })();
 
 // Initiate
-if($.os.ios) {
+if ($.os.ios) {
     $(document).on('deviceready', app.main.init);
 } else {
     app.main.init();
+}
+
+// helpers
+
+function getIndexByName(cityname) {
+    console.log(cityname);
+    var i;
+    app.main.dataFromServer.forEach(function(item, index) {
+        if (item.name === cityname) {
+            i = index;
+            // console.log(i);
+            // return i;
+        }
+    });
+    return i;
 }

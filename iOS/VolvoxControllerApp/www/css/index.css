@@ -34,3 +34,7 @@ header p.locations {
   font-size: 1.1em;
   margin: 15px 0px 5px 0px;
 }
+
+.body {
+  margin-top: 80px;
+}

@@ -54,7 +54,7 @@ var update = function(LOCATIONS, OSC){
 
     //get screen from req.query
     var screen = 1;
-    var type = "[type:location/property/img/like/share]";// get from req.query
+    var type = "[location/property/img/like/share]";// get from req.query
     var location = "[/DIR/TO/LOC/OR/IMAGE]";// get from req.query
     OSC.send(screen, type, location, function(addr, type, name){
       console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);

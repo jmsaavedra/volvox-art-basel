@@ -78,7 +78,7 @@ app.get ( '/property/:id/:imgid', admin.image( LOCATIONS, OSC ));
 */
 http.createServer(app).listen(app.get('port'), function(){
   console.log();
-  console.log('\n\n  Volvox Client Server Running  '.white.inverse);
+  console.log('\n  Volvox Client Server Running  '.white.inverse);
   var listeningString = '    Listening on port '+ app.get('port') +"      \n\n";
   console.log(listeningString.cyan.inverse);
 });

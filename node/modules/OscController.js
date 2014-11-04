@@ -33,7 +33,9 @@ var setup = function(){
 
 	//-- receiver
 	receiver = new OscReceiver();
+
 	receiver.bind(RECV_PORT);						//RECEIVE ON 7001
+
 	receiver.on('message', function() {
 	  // handle all messages
 	  var address = arguments[0];
@@ -41,6 +43,10 @@ var setup = function(){
 		console.log("OSC RECEIVED : ".green + address);
 		console.log(JSON.stringify(args));
 	});
+
+	console.log(">> OSC Controller setup() complete <<".green);
+	console.log(">> OSC SEND_PORT: ".yellow+ SEND_PORT);
+	console.log(">> OSC RECV_PORT: ".yellow+ RECV_PORT);
 }
 
 

@@ -135,7 +135,7 @@ Desktop.ini
 # Node.js
 ###################################
 
-/node_modules
+*/**/node_modules
 lib-cov
 lcov.info
 *.seed

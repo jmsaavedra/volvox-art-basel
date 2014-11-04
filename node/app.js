@@ -39,7 +39,11 @@ var app = require('express')();
 app.use('/', express.static(DropBoxDirectory));
 app.set('port', process.env.PORT || 8080);
 app.set('view engine', 'jade');
-
+app.use(function(req, res, next) {
+   res.header("Access-Control-Allow-Origin", "*");
+   res.header("Access-Control-Allow-Headers", "X-Requested-With");
+   next();
+});
 
 
 /***

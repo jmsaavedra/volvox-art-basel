@@ -27,9 +27,9 @@ var index = function(LOCATIONS, OSC){
     var allLocs = LOCATIONS.all();
 
     console.log('GET index '.blue); //JSON.stringify(allLocs));
-
-    OSC.send(1, "home", 0, function(addr, type, name){
-      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+    //screen, type, msg, cb
+    OSC.send(1, "home", 1, function(addr, type, name){
+      console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
     })
 
 
@@ -61,7 +61,7 @@ var location = function(LOCATIONS, OSC){
 
     var location = allLocs[locId].folder.toString();
     OSC.send(1, "location", location, function(addr, type, name){
-      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+      console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
     })
 
 
@@ -93,7 +93,7 @@ var property = function(LOCATIONS, OSC){
       // screen, type, name, cb
       var location = property.parent_name.toString() + "/" + property.folder.toString();
       OSC.send(1, "property", location, function(addr, type, name){
-        console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+        console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
       })
 
 
@@ -131,7 +131,7 @@ var image = function(LOCATIONS, OSC){
       console.log("thisImg: "+JSON.stringify(thisImg));
             //(screen, type, name, cb)
       OSC.send(1, "image", thisImg.url.toString(),function(addr, type, name){
-        console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+        console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
       })
 
       res.render('locations/index',

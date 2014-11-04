@@ -50,9 +50,16 @@ var setup = function(){
 */
 var send = function(screen, type, name, cb){
 	console.log("sending OSC to port ".yellow + SEND_PORT)
-	var _screen = '/screen_'+screen.toString();
-	emitter.emit(_screen, type, name);
-	cb(_screen, type, name);
+
+	//*** option 1 ***//
+	// var route = '/screen_'+screen.toString();
+	// emitter.emit(route, type, name);
+	// cb(route, type, name);
+
+	//*** option 2 ***//
+	var route = '/screen_'+screen.toString()+'/'+type.toString();
+	emitter.emit(route, type, name);
+	cb(route, type, name);
 
 }
 

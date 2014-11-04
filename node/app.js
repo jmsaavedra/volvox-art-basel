@@ -65,8 +65,7 @@ app.get ( '/init'     , client.init( LOCATIONS, DropBoxDirectory, OSC ));
 app.post( '/update'   , client.update( LOCATIONS, OSC ));
 app.post( '/share'    , client.share( LOCATIONS, OSC ));
 app.get ( '/about'    , client.about( LOCATIONS, OSC ));
-app.get ( '/like/:id' , client.like( LOCATIONS, OSC));
-
+app.get ( '/like/:id' , client.like( LOCATIONS, OSC));  // :property.id
 
 app.get ( '/location/:id', admin.location( LOCATIONS, OSC ));
 app.get ( '/property/:id', admin.property( LOCATIONS, OSC ));
@@ -79,8 +78,8 @@ app.get ( '/property/:id/:imgid', admin.image( LOCATIONS, OSC ));
 */
 http.createServer(app).listen(app.get('port'), function(){
   console.log();
-  console.log('  Volvox Client Server Running  '.white.inverse);
-  var listeningString = '    Listening on port '+ app.get('port') +"      ";
+  console.log('\n\n  Volvox Client Server Running  '.white.inverse);
+  var listeningString = '    Listening on port '+ app.get('port') +"      \n\n";
   console.log(listeningString.cyan.inverse);
 });
 

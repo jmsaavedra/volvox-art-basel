@@ -57,7 +57,11 @@ var setup = function(dropboxDirectory, cb){
 			})
 			thisProp.img = imgs;
 			//thisProp.img = _.without(fs.readdirSync(thisProp.dir+"/"+thisProp.name), "info.txt");
-			thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
+			if(fs.exists(thisProp.dir+"/info.txt"))
+				thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
+			else{
+				console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
+			} thisProp.info = "NONE FOUND";
 			propId ++;
 			thisLocProps.push(thisProp);
 			Properties.push(thisProp);

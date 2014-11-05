@@ -67,7 +67,7 @@ var send = function(screen, type, name, cb){
 
 	//*** option 2 ***//
 	var route = '/screen_'+screen.toString()+'/'+type.toString();
-	emitter.emit(route);
+	emitter.emit(route, 1);
 	cb(route, type, name);
 
 }

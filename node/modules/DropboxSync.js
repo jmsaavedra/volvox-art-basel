@@ -22,9 +22,10 @@ var Properties = [];
 var setup = function(dropboxDirectory, cb){
 	//TODO: query dropbox folder with fs, populate with that
 	Locations = [];
-	var propId = 0;
+
 	var locId = 0;
 	var imgId = 0;
+	var propId = 0;
 
 	//get all locations from dropbox top level
 	//if(fs.exists(dropboxDirectory)){
@@ -36,21 +37,22 @@ var setup = function(dropboxDirectory, cb){
 			thisLoc.name = loc.toLowerCase().capitalize();
 			thisLoc.folder = loc;
 			// thisLoc.slug = slug(thisLoc.name.toLowerCase());
-			thisLoc.id = "loc_"+locId.toString();
+			thisLoc.id = "loc"+locId.toString();
 			locId++;
 
 			//get properties for this loc
 			var theseProps = _.sortBy(_.without(fs.readdirSync(dropboxDirectory+"/"+loc), ".DS_Store"), function(name){return name});
-
+			var propCount = 0;
 			async.eachSeries(theseProps, function(prop, _callback){
 				var thisProp = {};
 				thisProp.dir = dropboxDirectory+"/"+loc+"/"+prop;
 				thisProp.name = prop.toLowerCase().capitalize();
 				thisProp.folder = prop;
 				// thisProp.slug = slug(thisProp.name.toLowerCase());
-				thisProp.parent_id = "loc_"+(locId-1);
+				thisProp.parent_id = "loc"+(locId-1);
 				thisProp.parent_name = loc;
-				thisProp.id = "prop_"+propId.toString();
+				thisProp.id = "uni_prop"+propId.toString();
+				thisProp.count = "prop"+propCount.toString();
 				var imgs = _.without(fs.readdirSync(thisProp.dir), "info.txt");
 				imgs.forEach(function(img, i){
 					imgs[i] = {id: "img_"+imgId.toString(), url: "/"+loc+"/"+prop+"/"+imgs[i]};
@@ -62,8 +64,9 @@ var setup = function(dropboxDirectory, cb){
 					thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
 				else{
 					console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
-				} thisProp.info = "NONE FOUND";
-				propId ++;
+				} thisProp.info = "NO INFO.TXT FILE FOUND";
+				propId ++; //global property id
+				propCount++; //this location property id
 				thisLocProps.push(thisProp);
 				Properties.push(thisProp);
 				_callback();

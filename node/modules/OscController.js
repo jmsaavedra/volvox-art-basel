@@ -19,17 +19,20 @@ var OscEmitter = require('osc-emitter');
 // SETUP
 //
 */
-var receiver;
-var emitter;
+var SEND_IP = 'localhost' //production
+// var SEND_IP = '192.168.0.3'; //dev
 var SEND_PORT = 7000;
 var RECV_PORT = 7001;
+var receiver;
+var emitter;
+
 
 
 var setup = function(){
 
 	//-- emitter
 	emitter = new OscEmitter();
-	emitter.add('localhost', SEND_PORT); //SEND ON 7000
+	emitter.add(SEND_IP, SEND_PORT); //SEND ON 7000
 
 	//-- receiver
 	receiver = new OscReceiver();
@@ -64,7 +67,7 @@ var send = function(screen, type, name, cb){
 
 	//*** option 2 ***//
 	var route = '/screen_'+screen.toString()+'/'+type.toString();
-	emitter.emit(route, type, name);
+	emitter.emit(route);
 	cb(route, type, name);
 
 }

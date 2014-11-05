@@ -168,12 +168,22 @@ var like = function(LOCATIONS, OSC){
     //get screen from req.query
     var screen = 1;
     var property = req.params.id;
-    OSC.send(screen, "like", property, function(addr, type, name){
-      console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name);
-    })
+    console.log("got id: "+ property);
 
+    LOCATIONS.getPropertyById(property, function(e, _property){
+      console.log("got property: ".green + JSON.stringify(_property, null, '\t'));
 
-    res.status(200).send("hit /like")
+      OSC.send(screen, "/"+_property.parent_id+"/"+_property.count+"/"+"like", property, function(addr, type, name){
+        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name);
+      })
+      res.render('locations/index',
+        { title: 'Douglas Elliman Controller',
+          slug: 'property',
+          property: _property
+        }
+      );
+    });
+    //res.status(200).send("hit /like")
   }
 }
 

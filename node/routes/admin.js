@@ -55,12 +55,12 @@ var location = function(LOCATIONS, OSC){
 
     var allLocs = LOCATIONS.all();
     var id = req.params.id.toString();
-    var locId = parseInt(id.split("_")[1]);
+    var locId = parseInt(id.split("loc")[1]);
 
     console.log('GET loc: '.blue+id +" : "+ JSON.stringify(allLocs[locId].name));
 
     var location = allLocs[locId].folder.toString();
-    OSC.send(1, "location", location, function(addr, type, name){
+    OSC.send(1, id, "", function(addr, type, name){
       console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
     })
 
@@ -88,11 +88,11 @@ var property = function(LOCATIONS, OSC){
 
     LOCATIONS.getPropertyById(id, function(e, property){
 
-      console.log('GET property: '.blue+id +" : "+ JSON.stringify(property.name));
+      console.log('GET property: '.blue+id +" : "+ JSON.stringify(property,null,'\t'));
 
       // screen, type, name, cb
       var location = property.parent_name.toString() + "/" + property.folder.toString();
-      OSC.send(1, "property", location, function(addr, type, name){
+      OSC.send(1, property.parent_id+"/"+property.count, "", function(addr, type, name){
         console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
       })
 
@@ -122,6 +122,7 @@ var image = function(LOCATIONS, OSC){
 
     var allLocs = LOCATIONS.all();
     var id = req.params.id.toString();
+    console.log("looking for property id: ".red+id);
     var imgid = req.params.imgid.toString();
 
     console.log('GET img: '.blue+imgid);
@@ -131,7 +132,7 @@ var image = function(LOCATIONS, OSC){
         var thisImg = new Object(_.where(property.img, {id: imgid})[0]);
         console.log("thisImg: "+JSON.stringify(thisImg));
               //(screen, type, name, cb)
-        OSC.send(1, "image", thisImg.url.toString(),function(addr, type, name){
+        OSC.send(1, property.parent_id+"/"+property.count+"/"+imgid,function(addr, type, name){
           console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
         })
 
@@ -143,15 +144,18 @@ var image = function(LOCATIONS, OSC){
         );
       });
     }else { //we hit left or right
-      OSC.send(1, "image/"+imgid, thisImg.url.toString(),function(addr, type, name){
-        console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
+      LOCATIONS.getPropertyById(id, function(e, property){
+        //console.log("got property: ".green + JSON.stringify(property, null, '\t'));
+        OSC.send(1, property.parent_id+"/"+property.count+"/"+imgid, "",function(addr, type, name){
+          console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
+        });
+        res.render('locations/index',
+          { title: 'Douglas Elliman Controller',
+            slug: 'property',
+            property: property
+          }
+        );
       });
-      res.render('locations/index',
-        { title: 'Douglas Elliman Controller',
-          slug: 'property',
-          property: property
-        }
-      );
     }
     //var locId = parseInt(id.split("_")[1]);
   }

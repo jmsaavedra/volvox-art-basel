@@ -18,8 +18,8 @@ var express   = require('express');
 // dropbox directory path!
 //
 */
-// var DropBoxDirectory = "C:/Users/WS_5/Dropbox/STRUCTURE/LOCATIONS"; //VOLVOX!!
-var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATIONS"; //JOE!!
+var DropBoxDirectory = "C:/Users/WS_5/Dropbox/STRUCTURE/LOCATIONS"; //VOLVOX!!
+// var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATIONS"; //JOE!!
 
 /***
 // custom modules
@@ -66,6 +66,8 @@ app.get ( '/init'     , client.init( LOCATIONS, DropBoxDirectory, OSC ));
 app.post( '/update'   , client.update( LOCATIONS, OSC ));
 app.post( '/share'    , client.share( LOCATIONS, OSC ));
 app.get ( '/about'    , client.about( LOCATIONS, OSC ));
+
+//TODO: this is a hack just for my browser prototype. property id will be passed in via POST.
 app.get ( '/like/:id' , client.like( LOCATIONS, OSC));  // :property.id
 
 app.get ( '/location/:id', admin.location( LOCATIONS, OSC ));

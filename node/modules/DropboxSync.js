@@ -27,63 +27,68 @@ var setup = function(dropboxDirectory, cb){
 	var imgId = 0;
 
 	//get all locations from dropbox top level
-	var locs = _.sortBy(_.without(fs.readdirSync(dropboxDirectory), ".DS_Store"), function(name){return name});
+	//if(fs.exists(dropboxDirectory)){
+		var locs = _.sortBy(_.without(fs.readdirSync(dropboxDirectory), ".DS_Store"), function(name){return name});
 
-	async.eachSeries(locs, function(loc, callback){
-		var thisLoc = {};
-		var thisLocProps = []
-		thisLoc.name = loc.toLowerCase().capitalize();
-		thisLoc.folder = loc;
-		// thisLoc.slug = slug(thisLoc.name.toLowerCase());
-		thisLoc.id = "loc_"+locId.toString();
-		locId++;
+		async.eachSeries(locs, function(loc, callback){
+			var thisLoc = {};
+			var thisLocProps = []
+			thisLoc.name = loc.toLowerCase().capitalize();
+			thisLoc.folder = loc;
+			// thisLoc.slug = slug(thisLoc.name.toLowerCase());
+			thisLoc.id = "loc_"+locId.toString();
+			locId++;
 
-		//get properties for this loc
-		var theseProps = _.sortBy(_.without(fs.readdirSync(dropboxDirectory+"/"+loc), ".DS_Store"), function(name){return name});
+			//get properties for this loc
+			var theseProps = _.sortBy(_.without(fs.readdirSync(dropboxDirectory+"/"+loc), ".DS_Store"), function(name){return name});
 
-		async.eachSeries(theseProps, function(prop, _callback){
-			var thisProp = {};
-			thisProp.dir = dropboxDirectory+"/"+loc+"/"+prop;
-			thisProp.name = prop.toLowerCase().capitalize();
-			thisProp.folder = prop;
-			// thisProp.slug = slug(thisProp.name.toLowerCase());
-			thisProp.parent_id = "loc_"+(locId-1);
-			thisProp.parent_name = loc;
-			thisProp.id = "prop_"+propId.toString();
-			var imgs = _.without(fs.readdirSync(thisProp.dir), "info.txt");
-			imgs.forEach(function(img, i){
-				imgs[i] = {id: "img_"+imgId.toString(), url: "/"+loc+"/"+prop+"/"+imgs[i]};
-				imgId++;
+			async.eachSeries(theseProps, function(prop, _callback){
+				var thisProp = {};
+				thisProp.dir = dropboxDirectory+"/"+loc+"/"+prop;
+				thisProp.name = prop.toLowerCase().capitalize();
+				thisProp.folder = prop;
+				// thisProp.slug = slug(thisProp.name.toLowerCase());
+				thisProp.parent_id = "loc_"+(locId-1);
+				thisProp.parent_name = loc;
+				thisProp.id = "prop_"+propId.toString();
+				var imgs = _.without(fs.readdirSync(thisProp.dir), "info.txt");
+				imgs.forEach(function(img, i){
+					imgs[i] = {id: "img_"+imgId.toString(), url: "/"+loc+"/"+prop+"/"+imgs[i]};
+					imgId++;
+				})
+				thisProp.img = imgs;
+				//thisProp.img = _.without(fs.readdirSync(thisProp.dir+"/"+thisProp.name), "info.txt");
+				if(fs.exists(thisProp.dir+"/info.txt"))
+					thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
+				else{
+					console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
+				} thisProp.info = "NONE FOUND";
+				propId ++;
+				thisLocProps.push(thisProp);
+				Properties.push(thisProp);
+				_callback();
+			}, function(_err){ //finished with all properties
+				if(!_err) thisLoc.properties = thisLocProps;
+				else console.log("error iterating properties: ".red+_err);
 			})
-			thisProp.img = imgs;
-			//thisProp.img = _.without(fs.readdirSync(thisProp.dir+"/"+thisProp.name), "info.txt");
-			if(fs.exists(thisProp.dir+"/info.txt"))
-				thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
+
+			Locations.push(thisLoc)
+			callback();
+
+		}, function(err){
+			if(!err){
+				console.log("\n>> DropboxSync setup() complete <<".green);
+				cb(null, Locations);
+			}
 			else{
-				console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
-			} thisProp.info = "NONE FOUND";
-			propId ++;
-			thisLocProps.push(thisProp);
-			Properties.push(thisProp);
-			_callback();
-		}, function(_err){ //finished with all properties
-			if(!_err) thisLoc.properties = thisLocProps;
-			else console.log("error iterating properties: ".red+_err);
-		})
+				console.log("error iterating locations: ".red+err);
+				cb(err, null);
+			}
+		});
+//	} //else {
 
-		Locations.push(thisLoc)
-		callback();
-
-	}, function(err){
-		if(!err){
-			console.log("\n>> DropboxSync setup() complete <<".green);
-			cb(null, Locations);
-		}
-		else{
-			console.log("error iterating locations: ".red+err);
-			cb(err, null);
-		}
-	});
+		//console.log("ERROR:".red.inverse + "DROPBOX FOLDER COULD NOT BE FOUND !! ");
+	//}
 
 }
 

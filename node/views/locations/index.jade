@@ -57,7 +57,9 @@ block content
     p Property
     h1 #{property.name}
     hr
-
+    a(href='/property/'+property.id+'/left').pure-button <-left
+    a(href='/property/'+property.id+'/right').pure-button right->
+    hr
     h3 Images
     div.imagetable
       for image in property.img

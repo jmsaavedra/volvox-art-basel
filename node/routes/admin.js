@@ -126,22 +126,33 @@ var image = function(LOCATIONS, OSC){
 
     console.log('GET img: '.blue+imgid);
 
-    LOCATIONS.getPropertyById(id, function(e, property){
-      var thisImg = new Object(_.where(property.img, {id: imgid})[0]);
-      console.log("thisImg: "+JSON.stringify(thisImg));
-            //(screen, type, name, cb)
-      OSC.send(1, "image", thisImg.url.toString(),function(addr, type, name){
-        console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
-      })
+    if(imgid != "left" && imgid != "right"){
+      LOCATIONS.getPropertyById(id, function(e, property){
+        var thisImg = new Object(_.where(property.img, {id: imgid})[0]);
+        console.log("thisImg: "+JSON.stringify(thisImg));
+              //(screen, type, name, cb)
+        OSC.send(1, "image", thisImg.url.toString(),function(addr, type, name){
+          console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
+        })
 
+        res.render('locations/index',
+          { title: 'Douglas Elliman Controller',
+            slug: 'property',
+            property: property
+          }
+        );
+      });
+    }else { //we hit left or right
+      OSC.send(1, "image/"+imgid, thisImg.url.toString(),function(addr, type, name){
+        console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
+      });
       res.render('locations/index',
         { title: 'Douglas Elliman Controller',
           slug: 'property',
           property: property
         }
       );
-
-    });
+    }
     //var locId = parseInt(id.split("_")[1]);
   }
 }

@@ -146,7 +146,7 @@ var image = function(LOCATIONS, OSC){
     }else { //we hit left or right
       LOCATIONS.getPropertyById(id, function(e, property){
         //console.log("got property: ".green + JSON.stringify(property, null, '\t'));
-        OSC.send(1, property.parent_id+"/"+property.count+"/"+imgid, "",function(addr, type, name){
+        OSC.send(1, "/"+imgid, "",function(addr, type, name){
           console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
         });
         res.render('locations/index',

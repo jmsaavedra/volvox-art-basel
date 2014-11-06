@@ -18,8 +18,10 @@ var express = require('express');
 // dropbox directory path!
 //
 */
-// var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATIONS";
-var DropBoxDirectory = "/Volumes/Dropbox/Dropbox/STRUCTURE/LOCATIONS";
+
+var DropBoxDirectory = "/Volumes/Dropbox/Dropbox/STRUCTURE/LOCATIONS"; // APON !!
+// var DropBoxDirectory = "C:/Users/WS_5/Dropbox/STRUCTURE/LOCATIONS"; //VOLVOX!!
+// var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATIONS"; //JOE!!
 
 /***
 // custom modules
@@ -47,7 +49,11 @@ app.use(function(req, res, next) {
 app.use('/', express.static(DropBoxDirectory));
 app.set('port', process.env.PORT || 8080);
 app.set('view engine', 'jade');
-
+app.use(function(req, res, next) {
+   res.header("Access-Control-Allow-Origin", "*");
+   res.header("Access-Control-Allow-Headers", "X-Requested-With");
+   next();
+});
 
 
 /***
@@ -64,13 +70,23 @@ var client = require('./routes/client');
 //
 */
 
+<<<<<<< HEAD
 app.get('/', admin.index(LOCATIONS, OSC));
 app.get('/init', client.init(LOCATIONS, DropBoxDirectory, OSC));
 app.post('/update', client.update(LOCATIONS, OSC));
 app.post('/share', client.share(LOCATIONS, OSC));
 app.get('/about', client.about(LOCATIONS, OSC));
 app.get('/like/:id', client.like(LOCATIONS, OSC));
+=======
+app.get ( '/'         , admin.index( LOCATIONS, OSC ));
+app.get ( '/init'     , client.init( LOCATIONS, DropBoxDirectory, OSC ));
+app.post( '/update'   , client.update( LOCATIONS, OSC ));
+app.post( '/share'    , client.share( LOCATIONS, OSC ));
+app.get ( '/about'    , client.about( LOCATIONS, OSC ));
+>>>>>>> master
 
+//TODO: this is a hack just for my browser prototype. property id will be passed in via POST.
+app.get ( '/like/:id' , client.like( LOCATIONS, OSC));  // :property.id
 
 app.get('/location/:id', admin.location(LOCATIONS, OSC));
 app.get('/property/:id', admin.property(LOCATIONS, OSC));
@@ -81,11 +97,12 @@ app.get('/property/:id/:imgid', admin.image(LOCATIONS, OSC));
 // go go go
 //
 */
-http.createServer(app).listen(app.get('port'), function() {
-    console.log();
-    console.log('  Volvox Client Server Running  '.white.inverse);
-    var listeningString = '    Listening on port ' + app.get('port') + "      ";
-    console.log(listeningString.cyan.inverse);
+
+http.createServer(app).listen(app.get('port'), function(){
+  console.log();
+  console.log('\n  Volvox Client Server Running  '.white.inverse);
+  var listeningString = '    Listening on port '+ app.get('port') +"      \n\n";
+  console.log(listeningString.cyan.inverse);
 });
 
 

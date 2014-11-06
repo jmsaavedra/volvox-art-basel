@@ -9,6 +9,8 @@
 /* includes and dependencies */
 var path    = require('path');
 var fs      = require('fs');
+var inspect = require('util').inspect;
+var Busboy = require('busboy');
 
 /***
 // INIT
@@ -48,20 +50,34 @@ var init = function( LOCATIONS, dropboxDir, OSC ){
 */
 var update = function(LOCATIONS, OSC){
 
-  var allLocs = LOCATIONS.all();
+  //get screen from req.query
+  var screen = 1; // get from busboy Field
+  var type = "[location/property/img/like/share]";// get from busboy Field
+  var location = "[/DIR/TO/LOC/OR/IMAGE]";// get from busboy Field
+
+
 
   return function(req, res){
+    console.log("/update POST received".cyan);
+    var allLocs = LOCATIONS.all();
 
-    //get screen from req.query
-    var screen = 1;
-    var type = "something";// get from req.query
-    var location = "other";// get from req.query
-    OSC.send(screen, type, location, function(addr, type, name){
-      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
-    })
+    var busboy = new Busboy({ headers: req.headers });
+
+    busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+      console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+    });
+    busboy.on('finish', function() {
+      console.log('Done parsing form!'.green);
+
+      OSC.send(screen, type, location, function(addr, type, name){
+        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name);
+      })
 
 
-    res.status(200).send("hit /update POST route")
+      res.status(200).send("/update OK")
+    });
+    req.pipe(busboy);
+
   }
 }
 
@@ -79,15 +95,41 @@ var update = function(LOCATIONS, OSC){
 */
 var share = function(LOCATIONS, OSC){
 
-  var allLocs = LOCATIONS.all();
-  return function(req, res){
-    //get screen from req.query
-    var screen = 1;
-    OSC.send(screen, "share", 0, function(addr, type, name){
-      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
-    })
 
-    res.status(200).send("hit /share POST route")
+  var screen = 1;     // get from busboy Field
+  var type = "share"; // share event
+  var location = 0;   // no location
+
+  var visitor = {     // placeholder visitor object
+    first_name: "first",
+    last_name: "last",
+    email: "name@addr.com",
+    properties: [
+      {"PATH/TO/LOC/":"1401 Myrtle ave"},
+      {"PATH/TO/LOC/":"71 Ocean Dr"}
+    ]
+  }
+
+  return function(req, res){
+    console.log("/share POST received".cyan);
+
+    var allLocs = LOCATIONS.all();
+
+    var busboy = new Busboy({ headers: req.headers });
+
+    busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+      console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+    });
+    busboy.on('finish', function() {
+      console.log('Done parsing form!'.green);
+
+      OSC.send(screen, type, location, function(addr, type, name){
+        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name);
+      })
+      res.status(200).send("/share OK")
+    });
+    req.pipe(busboy);
+
   }
 }
 
@@ -97,14 +139,15 @@ var share = function(LOCATIONS, OSC){
 */
 var about = function(LOCATIONS, OSC){
 
-  var allLocs = LOCATIONS.all();
+
 
   return function(req, res){
-
+    console.log("/about received".cyan);
+    var allLocs = LOCATIONS.all();
     //get screen from req.query
     var screen = 1;
-    OSC.send(screen, "about", 0, function(addr, type, name){
-      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
+    OSC.send(screen, "about", 1, function(addr, type, name){
+      console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name);
     })
 
 
@@ -118,19 +161,29 @@ var about = function(LOCATIONS, OSC){
 */
 var like = function(LOCATIONS, OSC){
 
-  var allLocs = LOCATIONS.all();
-
   return function(req, res){
+    console.log("/like received".cyan);
+    var allLocs = LOCATIONS.all();
 
     //get screen from req.query
     var screen = 1;
     var property = req.params.id;
-    OSC.send(screen, "like", property, function(addr, type, name){
-      console.log("OSC SENT TO: ".green.inverse + addr + "  msg: ".green+type+" "+name);
-    })
+    console.log("got id: "+ property);
 
+    LOCATIONS.getPropertyById(property, function(e, _property){
+      console.log("got property: ".green + JSON.stringify(_property, null, '\t'));
 
-    res.status(200).send("hit /like")
+      OSC.send(screen, "/"+_property.parent_id+"/"+_property.count+"/"+"like", property, function(addr, type, name){
+        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name);
+      })
+      res.render('locations/index',
+        { title: 'Douglas Elliman Controller',
+          slug: 'property',
+          property: _property
+        }
+      );
+    });
+    //res.status(200).send("hit /like")
   }
 }
 

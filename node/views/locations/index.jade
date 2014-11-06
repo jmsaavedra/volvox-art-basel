@@ -52,12 +52,14 @@ block content
     //- h5 !{JSON.stringify(property)}
     div.pure-menu.pure-menu-open.pure-menu-horizontal
       ul
-        li: a(href='/like/'+property.folder).pure-button Like
+        li: a(href='/like/'+property.id).pure-button Like
         li: a(href='/location/'+property.parent_id).pure-button Back
     p Property
     h1 #{property.name}
     hr
-
+    a(href='/property/'+property.id+'/left').pure-button <-left
+    a(href='/property/'+property.id+'/right').pure-button right->
+    hr
     h3 Images
     div.imagetable
       for image in property.img

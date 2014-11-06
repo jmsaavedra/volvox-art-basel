@@ -20,7 +20,7 @@ var Properties = [];
 //
 */
 var setup = function(dropboxDirectory, cb){
-	console.log("\nLooking for Dropbox folder in this Directory: \n\t~".red+dropboxDirectory);
+	console.log("\nLooking for Dropbox in Directory:\n~".yellow+dropboxDirectory);
 
 	Locations = [];
 
@@ -75,7 +75,7 @@ var setup = function(dropboxDirectory, cb){
 				//
 				// });
 				//thisProp.img = _.without(fs.readdirSync(thisProp.dir+"/"+thisProp.name), "info.txt");
-				fs.exists(thisProp.dir+"/info.txt", function(exists){
+				fs.existsSync(thisProp.dir+"/info.txt", function(exists){
 					if (exists){
 						thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
 					} else {
@@ -98,7 +98,7 @@ var setup = function(dropboxDirectory, cb){
 
 		}, function(err){
 			if(!err){
-				console.log(">> DropboxSync setup() complete <<\n".green);
+				console.log(">> DropboxSync setup complete <<\n".green);
 				cb(null, Locations);
 			}
 			else{

@@ -13,15 +13,15 @@ var http = require('http');
 var colors = require('colors');
 var express = require('express');
 
-
+console.log("\n******  INIT VOLVOX SERVER  *****".zebra);
 /***
 // dropbox directory path!
 //
 */
-
-// var DropBoxDirectory = "/Volumes/Dropbox/Dropbox/STRUCTURE/LOCATIONS"; // APON !!
 var DropBoxDirectory = "C:/Users/WS_5/Dropbox/STRUCTURE/LOCATIONS"; //VOLVOX!!
 // var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATIONS"; //JOE!!
+// var DropBoxDirectory = "/Volumes/Dropbox/Dropbox/STRUCTURE/LOCATIONS"; // APON !!
+
 
 /***
 // custom modules
@@ -30,8 +30,11 @@ var DropBoxDirectory = "C:/Users/WS_5/Dropbox/STRUCTURE/LOCATIONS"; //VOLVOX!!
 var LOCATIONS = require('./modules/DropboxSync');
 LOCATIONS.setup(DropBoxDirectory, function() {});
 
+var OSC_ADDR = "localhost";
+var OSC_SEND_PORT = 7000;
+var OSC_RECV_PORT = 7001;
 var OSC = require('./modules/OscController');
-OSC.setup();
+OSC.setup(OSC_ADDR, OSC_SEND_PORT, OSC_RECV_PORT);
 
 
 /***

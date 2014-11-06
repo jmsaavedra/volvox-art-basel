@@ -64,7 +64,8 @@ block content
     div.imagetable
       for image in property.img
         //- h6 #{image.url}
-        a(href='/property/'+property.id+'/'+image.id): img(src=image.url width="250px")
+        //-a(href='/property/'+property.id+'/'+image.id):
+        img(src=image.url width="250px")
 
     hr
 

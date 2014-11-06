@@ -19,25 +19,28 @@ var OscEmitter = require('osc-emitter');
 // SETUP
 //
 */
-var SEND_IP = 'localhost' //production
-// var SEND_IP = '192.168.0.3'; //dev
-var SEND_PORT = 7000;
-var RECV_PORT = 7001;
-var receiver;
-var emitter;
+var SEND_ADDR,
+		SEND_PORT,
+		RECV_PORT;
+// var SEND_IP = 'localhost' //production
+// // var SEND_IP = '192.168.0.3'; //dev
+// var SEND_PORT = 7000;
+// var RECV_PORT = 7001;
+// var receiver;
+// var emitter;
 
 
 
-var setup = function(){
+var setup = function(sendAddr, sendPort, recvPort){
 
 	//-- emitter
 	emitter = new OscEmitter();
-	emitter.add(SEND_IP, SEND_PORT); //SEND ON 7000
+	emitter.add(sendAddr, sendPort); //SEND ON 7000
 
 	//-- receiver
 	receiver = new OscReceiver();
 
-	receiver.bind(RECV_PORT);						//RECEIVE ON 7001
+	receiver.bind(recvPort);						//RECEIVE ON 7001
 
 	receiver.on('message', function() {
 	  // handle all messages
@@ -47,9 +50,10 @@ var setup = function(){
 		console.log(JSON.stringify(args));
 	});
 
-	console.log(">> OSC Controller setup() complete <<".green);
-	console.log(">> OSC SEND_PORT: ".yellow+ SEND_PORT);
-	console.log(">> OSC RECV_PORT: ".yellow+ RECV_PORT);
+	console.log("OSC SEND_ADDR: ".yellow + sendAddr);
+	console.log("OSC SEND_PORT: ".yellow + sendPort);
+	console.log("OSC RECV_PORT: ".yellow + recvPort);
+	console.log(">> OSC Controller setup complete <<".green);
 }
 
 
@@ -68,8 +72,8 @@ var send = function(screen, type, name, cb){
 	//*** option 2 ***//
 	var route = '/screen_'+screen.toString()+'/'+type.toString();
 	emitter.emit(route, 1);
+	setTimeout( function(){ emitter.emit(route, 0) }, 25);
 	cb(route, type, name);
-
 }
 
 /***

@@ -57,7 +57,7 @@ var setup = function(dropboxDirectory, cb){
 				// thisProp.slug = slug(thisProp.name.toLowerCase());
 				thisProp.parent_id = "loc"+(locId-1);
 				thisProp.parent_name = loc;
-				thisProp.id = "uni_prop"+propId.toString();
+				thisProp.id = "property_"+propId.toString();
 				thisProp.count = "prop"+propCount.toString();
 				var imgs = _.without(fs.readdirSync(thisProp.dir), "info.txt");
 				imgs.forEach(function(img, i){

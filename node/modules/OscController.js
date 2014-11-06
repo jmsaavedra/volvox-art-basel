@@ -50,6 +50,9 @@ var setup = function(sendAddr, sendPort, recvPort){
 		console.log(JSON.stringify(args));
 	});
 
+	SEND_ADDR = sendAddr;
+	SEND_PORT = sendPort;
+	RECV_PORT = recvPort;
 	console.log("OSC SEND_ADDR: ".yellow + sendAddr);
 	console.log("OSC SEND_PORT: ".yellow + sendPort);
 	console.log("OSC RECV_PORT: ".yellow + recvPort);
@@ -63,7 +66,7 @@ var setup = function(sendAddr, sendPort, recvPort){
 */
 var send = function(screen, type, name, cb){
 	console.log("sending OSC to port ".yellow + SEND_PORT)
-
+	console.log('type: '+type);
 	//*** option 1 ***//
 	// var route = '/screen_'+screen.toString();
 	// emitter.emit(route, type, name);
@@ -71,6 +74,7 @@ var send = function(screen, type, name, cb){
 
 	//*** option 2 ***//
 	var route = '/screen_'+screen.toString()+'/'+type.toString();
+	console.log("route: "+route);
 	emitter.emit(route, 1);
 	setTimeout( function(){ emitter.emit(route, 0) }, 25);
 	cb(route, type, name);

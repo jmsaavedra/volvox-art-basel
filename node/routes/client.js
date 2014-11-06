@@ -70,7 +70,7 @@ var update = function(LOCATIONS, OSC){
       console.log('Done parsing form!'.green);
 
       OSC.send(screen, type, location, function(addr, type, name){
-        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name);
+        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
       })
 
 
@@ -124,7 +124,7 @@ var share = function(LOCATIONS, OSC){
       console.log('Done parsing form!'.green);
 
       OSC.send(screen, type, location, function(addr, type, name){
-        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name);
+        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
       })
       res.status(200).send("/share OK")
     });
@@ -147,7 +147,7 @@ var about = function(LOCATIONS, OSC){
     //get screen from req.query
     var screen = 1;
     OSC.send(screen, "about", 1, function(addr, type, name){
-      console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name);
+      console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
     })
 
 
@@ -174,7 +174,7 @@ var like = function(LOCATIONS, OSC){
       console.log("got property: ".green + JSON.stringify(_property, null, '\t'));
 
       OSC.send(screen, "/"+_property.parent_id+"/"+_property.count+"/"+"like", property, function(addr, type, name){
-        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name);
+        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
       })
       res.render('locations/index',
         { title: 'Douglas Elliman Controller',

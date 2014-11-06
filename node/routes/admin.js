@@ -26,7 +26,7 @@ var index = function(LOCATIONS, OSC){
 
     var allLocs = LOCATIONS.all();
 
-    console.log('GET index '.blue); //JSON.stringify(allLocs));
+    //console.log('GET index '.blue); //JSON.stringify(allLocs));
     //screen, type, msg, cb
     OSC.send(1, "home", 1, function(addr, type, name){
       console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
@@ -57,7 +57,7 @@ var location = function(LOCATIONS, OSC){
     var id = req.params.id.toString();
     var locId = parseInt(id.split("loc")[1]);
 
-    console.log('GET loc: '.blue+id +" : "+ JSON.stringify(allLocs[locId].name));
+    //console.log('GET loc: '.blue+id +" : "+ JSON.stringify(allLocs[locId].name));
 
     var location = allLocs[locId].folder.toString();
     OSC.send(1, id, "", function(addr, type, name){
@@ -88,7 +88,7 @@ var property = function(LOCATIONS, OSC){
 
     LOCATIONS.getPropertyById(id, function(e, property){
 
-      console.log('GET property: '.blue+id +" : "+ JSON.stringify(property,null,'\t'));
+      //console.log('GET property: '.blue+id +" : "+ JSON.stringify(property,null,'\t'));
 
       // screen, type, name, cb
       var location = property.parent_name.toString() + "/" + property.folder.toString();
@@ -133,7 +133,7 @@ var image = function(LOCATIONS, OSC){
         console.log("thisImg: "+JSON.stringify(thisImg));
               //(screen, type, name, cb)
         OSC.send(1, property.parent_id+"/"+property.count+"/"+imgid,function(addr, type, name){
-          console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
+          console.log(" OSC SENT ".green.inverse +" route: ".green+addr+"  msg: ".green+type+" "+name+'\n');
         })
 
         res.render('locations/index',
@@ -146,8 +146,9 @@ var image = function(LOCATIONS, OSC){
     }else { //we hit left or right
       LOCATIONS.getPropertyById(id, function(e, property){
         //console.log("got property: ".green + JSON.stringify(property, null, '\t'));
-        OSC.send(1, "/"+imgid, "",function(addr, type, name){
-          console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name);
+        //console.log("imgid: "+imgid);
+        OSC.send(1, imgid, "",function(addr, type, name){
+          console.log(" OSC SENT ".green.inverse +" route: ".green+ addr + "  msg: ".green+type+" "+name+'\n');
         });
         res.render('locations/index',
           { title: 'Douglas Elliman Controller',

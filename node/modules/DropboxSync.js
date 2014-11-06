@@ -20,7 +20,8 @@ var Properties = [];
 //
 */
 var setup = function(dropboxDirectory, cb){
-	//TODO: query dropbox folder with fs, populate with that
+	console.log("\nLooking for Dropbox folder in this Directory: \n\t~".red+dropboxDirectory);
+
 	Locations = [];
 
 	var locId = 0;
@@ -59,12 +60,29 @@ var setup = function(dropboxDirectory, cb){
 					imgId++;
 				})
 				thisProp.img = imgs;
+				var thisInfoDir = thisProp.dir+"/info.txt";
+				// fs.readFileSync(thisInfoDir, {encoding: String}, function(err, data){
+				//
+				// 	if (err){
+				// 		//throw err;
+				// 		console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
+				// 		thisProp.info = "NO INFO.TXT FILE FOUND";
+				// 	} else {
+				// 	console.log("read file success: "+data);
+				// 	thisProp.info = data;
+				//
+				// 	}
+				//
+				// });
 				//thisProp.img = _.without(fs.readdirSync(thisProp.dir+"/"+thisProp.name), "info.txt");
-				if(fs.exists(thisProp.dir+"/info.txt"))
-					thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
-				else{
-					console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
-				} thisProp.info = "NO INFO.TXT FILE FOUND";
+				fs.exists(thisProp.dir+"/info.txt", function(exists){
+					if (exists){
+						thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
+					} else {
+						console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
+					}
+				});
+
 				propId ++; //global property id
 				propCount++; //this location property id
 				thisLocProps.push(thisProp);
@@ -80,7 +98,7 @@ var setup = function(dropboxDirectory, cb){
 
 		}, function(err){
 			if(!err){
-				console.log("\n>> DropboxSync setup() complete <<".green);
+				console.log(">> DropboxSync setup() complete <<\n".green);
 				cb(null, Locations);
 			}
 			else{

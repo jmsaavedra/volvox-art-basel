@@ -30,6 +30,10 @@ var setup = function(dropboxDirectory, cb){
 
 	//get all locations from dropbox top level
 	//if(fs.exists(dropboxDirectory)){
+	// var stats = fs.stat(dropboxDirectory);
+	// console.log(stats);
+	if (fs.existsSync(dropboxDirectory)) {
+	// if(stats.isDirectory()){
 		var locs = _.sortBy(_.without(fs.readdirSync(dropboxDirectory), ".DS_Store"), function(name){return name});
 
 		async.eachSeries(locs, function(loc, callback){
@@ -101,11 +105,12 @@ var setup = function(dropboxDirectory, cb){
 				cb(err, null);
 			}
 		});
-//	} //else {
+	} else {
 
-		//console.log("ERROR:".red.inverse + "DROPBOX FOLDER COULD NOT BE FOUND !! ");
-	//}
-
+		console.log("\n\n!!  ERROR:  ".red.inverse + " DROPBOX FOLDER COULD NOT BE FOUND".red);
+		console.log(">>> check DropBoxDirectory string in app.js file <<<\n\n");
+		process.exit(0);
+	}
 }
 
 
@@ -135,25 +140,6 @@ var checkInfoFile = function(thisDir, cb){
 				//
         // }
     });
-
-	//var statObj = fs.statSync(thisDir);
-
-	//console.log(statObj);
-	//console.log(statObj);
-	// fs.stat(thisDir, function(err, stat) {
-	// 	if(err == null || err.code ) {
-	// 			console.log('File exists: '+thisDir);
-	// 			cb(null)
-	// 	} else if(err.code == 'ENOENT') {
-	// 			console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
-	// 			console.log("Created File: ".green+thisInfoDir);
-	// 			fs.writeFile(thisDir, 'thisProp.name\n- a note\n- another note');
-	// 			cb(null);
-	// 	} else {
-	// 			console.log('Some other error: ', err.code);
-	// 			cb(err);
-	// 	}
-	// });
 }
 
 

@@ -19,9 +19,9 @@ var express = require('express');
 //
 */
 
-var DropBoxDirectory = "/Volumes/Dropbox/Dropbox/STRUCTURE/LOCATIONS"; // APON !!
+//var DropBoxDirectory = "/Volumes/Dropbox/Dropbox/STRUCTURE/LOCATIONS"; // APON !!
 // var DropBoxDirectory = "C:/Users/WS_5/Dropbox/STRUCTURE/LOCATIONS"; //VOLVOX!!
-// var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATIONS"; //JOE!!
+ var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATIONS"; //JOE!!
 
 /***
 // custom modules
@@ -70,20 +70,12 @@ var client = require('./routes/client');
 //
 */
 
-<<<<<<< HEAD
-app.get('/', admin.index(LOCATIONS, OSC));
-app.get('/init', client.init(LOCATIONS, DropBoxDirectory, OSC));
-app.post('/update', client.update(LOCATIONS, OSC));
-app.post('/share', client.share(LOCATIONS, OSC));
-app.get('/about', client.about(LOCATIONS, OSC));
-app.get('/like/:id', client.like(LOCATIONS, OSC));
-=======
+
 app.get ( '/'         , admin.index( LOCATIONS, OSC ));
 app.get ( '/init'     , client.init( LOCATIONS, DropBoxDirectory, OSC ));
 app.post( '/update'   , client.update( LOCATIONS, OSC ));
 app.post( '/share'    , client.share( LOCATIONS, OSC ));
 app.get ( '/about'    , client.about( LOCATIONS, OSC ));
->>>>>>> master
 
 //TODO: this is a hack just for my browser prototype. property id will be passed in via POST.
 app.get ( '/like/:id' , client.like( LOCATIONS, OSC));  // :property.id

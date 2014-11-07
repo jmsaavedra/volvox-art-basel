@@ -92,7 +92,7 @@ app.main = (function() {
                 // show detail page of property
                 console.log('Page: ' + property);
                 var cityIndex = getIndexByName(city);
-                var propertyIndex = getIndexByName(city, property);
+                var propertyIndex = getIndexByNameProp(cityIndex, property);
                 CLIENT.page_id = app.main.dataFromServer[cityIndex].properties[propertyIndex].id;
                 render({
                     tpl: 'tpl-prop-detail',
@@ -196,6 +196,16 @@ function getIndexByName(cityname) {
             i = index;
             // console.log(i);
             // return i;
+        }
+    });
+    return i;
+}
+
+function getIndexByNameProp(index, propname) {
+    var i;
+    app.main.dataFromServer[index].properties.forEach(function(item, index) {
+        if(item.name === propname) {
+            i = index;
         }
     });
     return i;

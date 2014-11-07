@@ -5,12 +5,20 @@
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1" />
-        <link rel="stylesheet" type="text/css" href="css/normalize.min.css">
+        <link rel="stylesheet" type="text/css" href="">
+        <link rel="stylesheet" type="text/css" href="css/skeleton.min.css">
         <link rel="stylesheet" type="text/css" href="css/index.css" />
     </head>
     <body>
 
         <div id="view"></div>
+        <footer>
+            <div class="left"></div>
+            <div class="right">
+                <a href="/#/share">Share</a> | 
+                <a href="/#/about">About</a>
+            </div>
+        </footer>
 
         <!-- Templates -->
         <script type="text/html" id="tpl-list-locations">
@@ -19,9 +27,11 @@
             </header>
             <div class="body">
                 <% _.each(list_locations, function(item) { %>
-                    <li>
-                        <a href="/#/cities/<%= item.name %>"><%= item.name %></a>
+                    <a href="/#/cities/<%= item.name %>">
+                    <li class="list_title">
+                        <%= item.name %>
                     </li>
+                    </a>
                 <% }); %>
             </div>
         </script>
@@ -32,9 +42,12 @@
             </header>
             <div class="body">
                 <% _.each(list_properties, function(item) { %>
-                    <li>
-                        <a href="<% window.location.hash %>"><%= item.name %></a>
+                    <a href="/<%= current_hash %>/<%= item.name %>">
+                    <li class="list_title">
+                        <span><%= item.name %></span>
+                        <span class="flag">&#9873;</span>
                     </li>
+                    </a>
                 <% }); %>
             </div>
         </script>

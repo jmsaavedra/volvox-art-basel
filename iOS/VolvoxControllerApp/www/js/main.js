@@ -4,7 +4,7 @@
 var CLIENT = {
     session_id: '',
     server_address: 'http://localhost:8080',
-    page_id: 0,
+    page_id: '',
     screen_id: 1,
     favorites: []
 };
@@ -23,6 +23,9 @@ app.main = (function() {
         FastClick.attach(document.body);
         // init localStorage
         initLS();
+        // init session id
+        CLIENT.session_id = generateUUID();
+        attachEvents();
         // Call server
         initServerCall();
         // re-route to default page: locations
@@ -43,6 +46,7 @@ app.main = (function() {
         $.get(CLIENT.server_address + '/init', function(d) {
             if (d.length > 0) {
                 app.main.dataFromServer = d;
+                $(window).trigger('getDataSuccess');
             }
         });
     };
@@ -52,11 +56,13 @@ app.main = (function() {
             // all locations
             '/cities': function() {
                 console.log('Page: cities');
+                CLIENT.page_id = 'allLocation';
                 render({
                     tpl: 'tpl-list-locations',
                     page: 'locations',
                     header: 'Locations'
                 }, function() { // callback
+                    // console.log(app.main.dataFromServer);
                     app.main._compiled = _.template(app.main._template, {
                         header_title: app.main._objData.header,
                         list_locations: app.main.dataFromServer
@@ -67,6 +73,7 @@ app.main = (function() {
             '/cities/:city': function(city) {
                 // show list of properties in that city
                 console.log('Page: ' + city);
+                CLIENT.page_id = app.main.dataFromServer[getIndexByName(city)].id;
                 render({
                     tpl: 'tpl-list-props',
                     header: city,
@@ -74,6 +81,7 @@ app.main = (function() {
                     back: true
                 }, function() {
                     app.main._compiled = _.template(app.main._template, {
+                        current_hash: window.location.hash,
                         header_title: app.main._objData.header,
                         list_properties: app.main.dataFromServer[getIndexByName(city)].properties
                     });
@@ -83,17 +91,18 @@ app.main = (function() {
             '/cities/:city/:property': function(city, property) {
                 // show detail page of property
                 console.log('Page: ' + property);
+                var cityIndex = getIndexByName(city);
+                var propertyIndex = getIndexByName(city, property);
+                CLIENT.page_id = app.main.dataFromServer[cityIndex].properties[propertyIndex].id;
                 render({
                     tpl: 'tpl-prop-detail',
                     header: property,
                     page: property, // ex: Park Grove
                     back: true
                 }, function() {
-                    var cityIndex = getIndexByName(city);
-                    var propertyIndex = getIndexByName(city, property);
                     app.main._compiled = _.template(app.main._template, {
                         header_title: app.main._objData.header,
-                        img: app.main.dataFromServer[cityIndex].properties[propertyIndex],
+                        img: app.main.dataFromServer[cityIndex].properties[propertyIndex].img,
                         note: ''
                     });
                     $('#view').html(app.main._compiled);
@@ -131,6 +140,22 @@ app.main = (function() {
 
     var attachEvents = function() {
         console.log('attaching events');
+        $(window).off('getDataSuccess').on('getDataSuccess', function() {
+            console.log('Page: cities');
+            CLIENT.page_id = 'allLocation';
+            render({
+                tpl: 'tpl-list-locations',
+                page: 'locations',
+                header: 'Locations'
+            }, function() { // callback
+                // console.log(app.main.dataFromServer);
+                app.main._compiled = _.template(app.main._template, {
+                    header_title: app.main._objData.header,
+                    list_locations: app.main.dataFromServer
+                });
+                $('#view').html(app.main._compiled);
+            });
+        });
         // off().on() every time REMEMBER?
         $('.page')
             .off('webkitTransitionEnd')
@@ -164,7 +189,7 @@ if ($.os.ios) {
 // helpers
 
 function getIndexByName(cityname) {
-    console.log(cityname);
+    // console.log(cityname);
     var i;
     app.main.dataFromServer.forEach(function(item, index) {
         if (item.name === cityname) {
@@ -175,3 +200,13 @@ function getIndexByName(cityname) {
     });
     return i;
 }
+
+function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+    });
+    return uuid;
+};

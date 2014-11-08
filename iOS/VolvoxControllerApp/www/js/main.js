@@ -11,6 +11,7 @@ var CLIENT = {
 //====================================================//
 
 var app = app || {};
+app.title = 'Douglas Elliman';
 
 app.main = (function() {
     var dataFromServer = {};
@@ -19,6 +20,7 @@ app.main = (function() {
     var _objData;
     var init = function() {
         // app starts running here
+        app.phonegap.init();
         // attach fastClick
         FastClick.attach(document.body);
         // init localStorage
@@ -41,6 +43,12 @@ app.main = (function() {
             // pull from localStorage
             CLIENT = JSON.parse(localStorage['app']);
         }
+    };
+
+    var updateLS = function() {
+        console.log('update LS');
+        // replacing ['app'] with new CLIENT
+        localStorage['app'] = JSON.stringify(CLIENT);
     };
 
     var initServerCall = function() {
@@ -81,6 +89,7 @@ app.main = (function() {
                     page: city // ex: south florida
                 }, function() {
                     app.main._compiled = _.template(app.main._template, {
+                        fav: CLIENT.favorites,
                         back: true,
                         current_hash: window.location.hash,
                         header_title: app.main._objData.header,
@@ -180,7 +189,7 @@ app.main = (function() {
         //fav
         $('.favBtn').off('click').on('click', function() {
             var that = $(this);
-            if(that.hasClass('faved')) {
+            if (that.hasClass('faved')) {
                 // remove faved
                 that.removeClass('faved');
                 // remove from CLIENT.favorites
@@ -192,6 +201,11 @@ app.main = (function() {
                 CLIENT.favorites = _.unique(CLIENT.favorites);
             }
             app.main.updateLS();
+        });
+
+        // action sheet
+        $('footer .left').off('click').on('click', function() {
+            app.phonegap.actionSheet();
         });
 
         // off().on() every time REMEMBER?
@@ -214,27 +228,80 @@ app.main = (function() {
         _compiled: _compiled,
         _template: _template,
         _objData: _objData,
-        updateLS: updateLS();
+        updateLS: updateLS
     };
 })();
 
 // Initiate
 if (Zepto.os.ios) {
     Zepto(document).on('deviceready', app.main.init);
+    // alert('Running on iOS');
 } else {
     app.main.init();
 }
 
-// helpers
+// PHONEGAP ////////////////////////////////////////////////////
+app.phonegap = (function() {
+    var init = function() {
+        // replace alert
+        // window.alert = function(message) {
+        //     // console.log('alert');
+        //     if (navigator.notification) {
+        //         navigator.notification.alert(message, null, app.title, 'Dismiss');
+        //     } else {
+        //         alert(app.title ? (app.title + ": " + message) : message);
+        //     }
+        // };
+    };
+    var actionSheet = function() {
+        //
+        function screenCheck(n) {
+            if (CLIENT.screen_id === n) {
+                return 'SCREEN ' + n + ' (Selected)';
+            } else {
+                return 'SCREEN ' + n;
+            }
+        }
+        var options = {
+            title: 'Session: ' + CLIENT.session_id,
+            'buttonLabels': [screenCheck(1), screenCheck(2)],
+            'addCancelButtonWithLabel': 'Cancel',
+            'addDestructiveButtonWithLabel': 'Restart Session'
+        };
+        var callback = function(buttonIndex) {
+            setTimeout(function() {
+                // like other Cordova plugins (prompt, confirm) the buttonIndex is 1-based (first button is index 1)
+                // alert('button index clicked: ' + buttonIndex);
+                if (buttonIndex === 2) {
+                    // select screen 1
+                    CLIENT.screen_id = 1;
+                } else if (buttonIndex === 3) {
+                    CLIENT.screen_id = 2;
+                } else if (buttonIndex === 1) {
+                    window.location.reload();
+                }
+            });
+        };
+        window.plugins.actionsheet.show(options, callback);
+    };
+    return {
+        init: init,
+        actionSheet: actionSheet
+    };
+})();
+
+// helpers ////////////////////////////////////////////////////
 
 function getFav(prop_id) {
+    console.log('seeking fav', prop_id);
+    var t = false;
     CLIENT.favorites.forEach(function(item) {
-        if(item === prop_id) {
-            return true;
-        } else {
-            return false;
+        if (item === prop_id) {
+            t = true;
+            console.log('this prop is favorited');
         }
     });
+    return t;
 }
 
 function getIndexByName(cityname) {

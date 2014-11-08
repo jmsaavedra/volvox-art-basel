@@ -89,3 +89,49 @@ footer .right {
   float: right;
   color: #d0d0d0;
 }
+
+.slick_carousel {
+  width: 100%;
+}
+.slick_carousel .slick_carousel_bg {
+  width: 100%;
+  height: 250px;
+}
+.slick_carousel .slick_carousel_bg img {
+  height: 100%;
+}
+
+.prop_info {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.backBtn {
+  position: absolute;
+  top: 27px;
+  left: 20px;
+  color: #1f5fc5;
+  font-size: 1.25em;
+  cursor: pointer;
+}
+
+.favBtn {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  color: #98a4b9;
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.faved {
+  color: #a81823 !important;
+}
+
+#share_form {
+  padding: 20px 20px;
+}
+
+.prop_info {
+  padding: 20px;
+}

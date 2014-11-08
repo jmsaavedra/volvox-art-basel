@@ -38,7 +38,8 @@ app.main = (function() {
             // pull from localStorage
             localStorage['app'] = JSON.stringify(CLIENT);
         } else {
-
+            // pull from localStorage
+            CLIENT = JSON.parse(localStorage['app']);
         }
     };
 
@@ -77,10 +78,10 @@ app.main = (function() {
                 render({
                     tpl: 'tpl-list-props',
                     header: city,
-                    page: city, // ex: south florida
-                    back: true
+                    page: city // ex: south florida
                 }, function() {
                     app.main._compiled = _.template(app.main._template, {
+                        back: true,
                         current_hash: window.location.hash,
                         header_title: app.main._objData.header,
                         list_properties: app.main.dataFromServer[getIndexByName(city)].properties
@@ -97,15 +98,24 @@ app.main = (function() {
                 render({
                     tpl: 'tpl-prop-detail',
                     header: property,
-                    page: property, // ex: Park Grove
-                    back: true
+                    page: property // ex: Park Grove
                 }, function() {
                     app.main._compiled = _.template(app.main._template, {
+                        back: true,
+                        fav: getFav(CLIENT.page_id),
+                        server_address: CLIENT.server_address,
                         header_title: app.main._objData.header,
-                        img: app.main.dataFromServer[cityIndex].properties[propertyIndex].img,
-                        note: ''
+                        images: app.main.dataFromServer[cityIndex].properties[propertyIndex].img,
+                        info: app.main.dataFromServer[cityIndex].properties[propertyIndex].info
                     });
                     $('#view').html(app.main._compiled);
+                    // start slick
+                    $('.slick_carousel').slick({
+                        infinite: false,
+                        accessibility: true,
+                        autoplay: false,
+                        dots: true
+                    });
                 });
             },
             '/share': function() {
@@ -115,6 +125,13 @@ app.main = (function() {
                     header: 'Share',
                     page: 'share',
                     back: true
+                }, function() {
+                    app.main._compiled = _.template(app.main._template, {
+                        back: true,
+                        server_address: CLIENT.server_address,
+                        header_title: app.main._objData.header
+                    });
+                    $('#view').html(app.main._compiled);
                 });
             }
         });
@@ -125,16 +142,15 @@ app.main = (function() {
         $.post(CLIENT.server_address + '/update', CLIENT, function(e) {
             // console.log(e);
             $(window).on('ajaxSuccess', function() {
-                console.log('-----ajax Success');
+                console.log('-----Update to server Success');
                 $(this).off('ajaxSuccess');
                 app.main._objData = obj;
                 app.main._template = $('#' + obj.tpl).html();
                 if (callback !== undefined) {
                     callback();
+                    attachEvents();
                 }
             });
-
-            attachEvents();
         });
     };
 
@@ -156,6 +172,28 @@ app.main = (function() {
                 $('#view').html(app.main._compiled);
             });
         });
+        // back
+        $('.backBtn').off('click').on('click', function() {
+            window.history.back();
+        });
+
+        //fav
+        $('.favBtn').off('click').on('click', function() {
+            var that = $(this);
+            if(that.hasClass('faved')) {
+                // remove faved
+                that.removeClass('faved');
+                // remove from CLIENT.favorites
+                CLIENT.favorites.splice(CLIENT.page_id, 1);
+            } else {
+                // add faved
+                that.addClass('faved');
+                CLIENT.favorites.push(CLIENT.page_id);
+                CLIENT.favorites = _.unique(CLIENT.favorites);
+            }
+            app.main.updateLS();
+        });
+
         // off().on() every time REMEMBER?
         $('.page')
             .off('webkitTransitionEnd')
@@ -175,18 +213,29 @@ app.main = (function() {
         initServerCall: initServerCall,
         _compiled: _compiled,
         _template: _template,
-        _objData: _objData
+        _objData: _objData,
+        updateLS: updateLS();
     };
 })();
 
 // Initiate
-if ($.os.ios) {
-    $(document).on('deviceready', app.main.init);
+if (Zepto.os.ios) {
+    Zepto(document).on('deviceready', app.main.init);
 } else {
     app.main.init();
 }
 
 // helpers
+
+function getFav(prop_id) {
+    CLIENT.favorites.forEach(function(item) {
+        if(item === prop_id) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+}
 
 function getIndexByName(cityname) {
     // console.log(cityname);
@@ -204,7 +253,7 @@ function getIndexByName(cityname) {
 function getIndexByNameProp(index, propname) {
     var i;
     app.main.dataFromServer[index].properties.forEach(function(item, index) {
-        if(item.name === propname) {
+        if (item.name === propname) {
             i = index;
         }
     });

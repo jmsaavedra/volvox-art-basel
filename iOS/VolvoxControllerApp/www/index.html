@@ -5,8 +5,8 @@
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1" />
-        <link rel="stylesheet" type="text/css" href="">
         <link rel="stylesheet" type="text/css" href="css/skeleton.min.css">
+        <link rel="stylesheet" type="text/css" href="css/slick.css">
         <link rel="stylesheet" type="text/css" href="css/index.css" />
     </head>
     <body>
@@ -38,6 +38,9 @@
 
         <script type="text/html" id="tpl-list-props">
             <header>
+                <% if(back === true) { %>
+                    <span class="backBtn">Back</span>
+                <% } %>
                 <p class="header_title"><%= header_title %></p>
             </header>
             <div class="body">
@@ -54,25 +57,61 @@
 
         <script type="text/html" id="tpl-prop-detail">
             <header>
+                <% if(back === true) { %>
+                    <span class="backBtn">Back</span>
+                <% } %>
+                <% if(fav === true) { %>
+                    <span class="favBtn faved">&#9873;</span>
+                <% } else { %>
+                    <span class="favBtn">&#9873;</span>
+                <% } %>
                 <p class="header_title"><%= header_title %></p>
             </header>
             <div class="body">
+                <div class="slick_carousel">
+                    <% _.each(images, function(image) { %>
+                        <!--
+                        <div class="slick_carousel_bg" style="background: url(<%= server_address %><%= image.url %>)">
+                        </div>
+                        -->
+                        <div class="slick_carousel_bg">
+                            <img src="<%= server_address %><%= image.url %>">
+                        </div>
+                    <% }); %>
+                </div>
+                <div class="prop_info">
+                    <p><%= info %></p>
+                </div>
             </div>
         </script>
 
         <script type="text/html" id="tpl-share">
             <header>
+                <% if(back === true) { %>
+                    <span class="backBtn">Back</span>
+                <% } %>
                 <p class="header_title"><%= header_title %></p>
             </header>
             <div class="body">
+                <form id="share_form">
+                    <label>First name:</label>
+                    <input type="text">
+                    <label>Last name:</label>
+                    <input type="text">
+                    <label>Email address:</label>
+                    <input type="text">
+                    <input type="submit">
+                </form>
             </div>
         </script>
 
         <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
         <script type="text/javascript" src="js/zepto.min.js"></script>
         <script type="text/javascript" src="js/fastclick.min.js"></script>
         <script type="text/javascript" src="js/lodash.min.js"></script>
         <script type="text/javascript" src="js/routie.min.js"></script>
+        <script type="text/javascript" src="js/slick.min.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>

@@ -15,8 +15,8 @@
         <footer>
             <div class="left"></div>
             <div class="right">
-                <a href="/#/share">Share</a> | 
-                <a href="/#/about">About</a>
+                <a href="#/share">Share</a> | 
+                <a href="#/cities">About</a>
             </div>
         </footer>
 
@@ -27,7 +27,7 @@
             </header>
             <div class="body">
                 <% _.each(list_locations, function(item) { %>
-                    <a href="/#/cities/<%= item.name %>">
+                    <a href="#/cities/<%= item.name %>">
                     <li class="list_title">
                         <%= item.name %>
                     </li>
@@ -45,10 +45,14 @@
             </header>
             <div class="body">
                 <% _.each(list_properties, function(item) { %>
-                    <a href="/<%= current_hash %>/<%= item.name %>">
+                    <a href="<%= current_hash %>/<%= item.name %>">
                     <li class="list_title">
                         <span><%= item.name %></span>
-                        <span class="flag">&#9873;</span>
+                        <% if(_.contains(fav, item.id)) { %>
+                            <span class="flag faved">&#9873;</span>
+                        <% } else { %>
+                            <span class="flag">&#9873;</span>
+                        <% } %>
                     </li>
                     </a>
                 <% }); %>
@@ -93,15 +97,15 @@
                 <p class="header_title"><%= header_title %></p>
             </header>
             <div class="body">
-                <form id="share_form">
+                <div id="share_form">
                     <label>First name:</label>
-                    <input type="text">
+                    <input type="text" id="share_first_name">
                     <label>Last name:</label>
-                    <input type="text">
+                    <input type="text" id="share_last_name">
                     <label>Email address:</label>
-                    <input type="text">
-                    <input type="submit">
-                </form>
+                    <input type="text" id="share_email">
+                    <input type="submit" id="share_submit">
+                </div>
             </div>
         </script>
 

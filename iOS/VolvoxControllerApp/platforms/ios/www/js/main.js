@@ -11,6 +11,7 @@ var CLIENT = {
 //====================================================//
 
 var app = app || {};
+app.title = 'Douglas Elliman';
 
 app.main = (function() {
     var dataFromServer = {};
@@ -19,6 +20,7 @@ app.main = (function() {
     var _objData;
     var init = function() {
         // app starts running here
+        app.phonegap.init();
         // attach fastClick
         FastClick.attach(document.body);
         // init localStorage
@@ -38,8 +40,15 @@ app.main = (function() {
             // pull from localStorage
             localStorage['app'] = JSON.stringify(CLIENT);
         } else {
-
+            // pull from localStorage
+            CLIENT = JSON.parse(localStorage['app']);
         }
+    };
+
+    var updateLS = function() {
+        console.log('update LS');
+        // replacing ['app'] with new CLIENT
+        localStorage['app'] = JSON.stringify(CLIENT);
     };
 
     var initServerCall = function() {
@@ -77,10 +86,11 @@ app.main = (function() {
                 render({
                     tpl: 'tpl-list-props',
                     header: city,
-                    page: city, // ex: south florida
-                    back: true
+                    page: city // ex: south florida
                 }, function() {
                     app.main._compiled = _.template(app.main._template, {
+                        fav: CLIENT.favorites,
+                        back: true,
                         current_hash: window.location.hash,
                         header_title: app.main._objData.header,
                         list_properties: app.main.dataFromServer[getIndexByName(city)].properties
@@ -92,20 +102,29 @@ app.main = (function() {
                 // show detail page of property
                 console.log('Page: ' + property);
                 var cityIndex = getIndexByName(city);
-                var propertyIndex = getIndexByName(city, property);
+                var propertyIndex = getIndexByNameProp(cityIndex, property);
                 CLIENT.page_id = app.main.dataFromServer[cityIndex].properties[propertyIndex].id;
                 render({
                     tpl: 'tpl-prop-detail',
                     header: property,
-                    page: property, // ex: Park Grove
-                    back: true
+                    page: property // ex: Park Grove
                 }, function() {
                     app.main._compiled = _.template(app.main._template, {
+                        back: true,
+                        fav: getFav(CLIENT.page_id),
+                        server_address: CLIENT.server_address,
                         header_title: app.main._objData.header,
-                        img: app.main.dataFromServer[cityIndex].properties[propertyIndex].img,
-                        note: ''
+                        images: app.main.dataFromServer[cityIndex].properties[propertyIndex].img,
+                        info: app.main.dataFromServer[cityIndex].properties[propertyIndex].info
                     });
                     $('#view').html(app.main._compiled);
+                    // start slick
+                    $('.slick_carousel').slick({
+                        infinite: false,
+                        accessibility: true,
+                        autoplay: false,
+                        dots: true
+                    });
                 });
             },
             '/share': function() {
@@ -115,6 +134,13 @@ app.main = (function() {
                     header: 'Share',
                     page: 'share',
                     back: true
+                }, function() {
+                    app.main._compiled = _.template(app.main._template, {
+                        back: true,
+                        server_address: CLIENT.server_address,
+                        header_title: app.main._objData.header
+                    });
+                    $('#view').html(app.main._compiled);
                 });
             }
         });
@@ -125,16 +151,15 @@ app.main = (function() {
         $.post(CLIENT.server_address + '/update', CLIENT, function(e) {
             // console.log(e);
             $(window).on('ajaxSuccess', function() {
-                console.log('-----ajax Success');
+                console.log('-----Update to server Success');
                 $(this).off('ajaxSuccess');
                 app.main._objData = obj;
                 app.main._template = $('#' + obj.tpl).html();
                 if (callback !== undefined) {
                     callback();
+                    attachEvents();
                 }
             });
-
-            attachEvents();
         });
     };
 
@@ -156,6 +181,59 @@ app.main = (function() {
                 $('#view').html(app.main._compiled);
             });
         });
+        // back
+        $('.backBtn').off('click').on('click', function() {
+            window.history.back();
+        });
+
+        //fav
+        $('.favBtn').off('click').on('click', function() {
+            var that = $(this);
+            if (that.hasClass('faved')) {
+                // remove faved
+                that.removeClass('faved');
+                // remove from CLIENT.favorites
+                CLIENT.favorites.splice(CLIENT.page_id, 1);
+            } else {
+                // add faved
+                that.addClass('faved');
+                CLIENT.favorites.push(CLIENT.page_id);
+                CLIENT.favorites = _.unique(CLIENT.favorites);
+            }
+            app.main.updateLS();
+        });
+
+        // share
+        $('#share_submit').off('click').on('click', function() {
+            var dataToSend = {
+                firstName: $('#share_first_name').val(),
+                lastName: $('#share_last_name').val(),
+                email: $('#share_email').val(),
+                favorites: CLIENT.favorites
+            };
+            $.ajax({
+                url: CLIENT.server_address + '/share',
+                dataType: 'json',
+                method: 'POST',
+                data: dataToSend,
+                success: function() {
+                    alert('Information sent. The app will now restart.', function() {
+                        window.location.reload();
+                        localStorage.clear();
+                    });
+                },
+                error: function() {
+                    alert('Error. Please check the server.', function() {
+                    });
+                }
+            });
+        });
+
+        // action sheet
+        $('footer .left').off('click').on('click', function() {
+            app.phonegap.actionSheet();
+        });
+
         // off().on() every time REMEMBER?
         $('.page')
             .off('webkitTransitionEnd')
@@ -175,18 +253,85 @@ app.main = (function() {
         initServerCall: initServerCall,
         _compiled: _compiled,
         _template: _template,
-        _objData: _objData
+        _objData: _objData,
+        updateLS: updateLS
     };
 })();
 
 // Initiate
-if ($.os.ios) {
-    $(document).on('deviceready', app.main.init);
+if (Zepto.os.ios) {
+    Zepto(document).on('deviceready', app.main.init);
+    // alert('Running on iOS');
 } else {
     app.main.init();
 }
 
-// helpers
+// PHONEGAP ////////////////////////////////////////////////////
+app.phonegap = (function() {
+    var init = function() {
+        // replace alert
+        window.alert = function(message, cb) {
+            // console.log('alert');
+            if (navigator.notification) {
+                navigator.notification.alert(message, cb(), app.title, 'OK');
+            } else {
+                alert(app.title ? (app.title + ": " + message) : message);
+            }
+        };
+    };
+    var actionSheet = function() {
+        //
+        function screenCheck(n) {
+            if (CLIENT.screen_id === n) {
+                return 'SCREEN ' + n + ' (Selected)';
+            } else {
+                return 'SCREEN ' + n;
+            }
+        }
+        var options = {
+            title: 'Session: ' + CLIENT.session_id,
+            'buttonLabels': [screenCheck(1), screenCheck(2)],
+            'addCancelButtonWithLabel': 'Cancel',
+            'addDestructiveButtonWithLabel': 'Restart Session'
+        };
+        var callback = function(buttonIndex) {
+            setTimeout(function() {
+                // like other Cordova plugins (prompt, confirm) the buttonIndex is 1-based (first button is index 1)
+                // alert('button index clicked: ' + buttonIndex);
+                if (buttonIndex === 2) {
+                    // select screen 1
+                    CLIENT.screen_id = 1;
+                } else if (buttonIndex === 3) {
+                    CLIENT.screen_id = 2;
+                } else if (buttonIndex === 1) {
+                    alert('The app will now restart.', function() {
+                        window.location.reload();
+                        localStorage.clear();
+                    });
+                }
+            });
+        };
+        window.plugins.actionsheet.show(options, callback);
+    };
+    return {
+        init: init,
+        actionSheet: actionSheet
+    };
+})();
+
+// helpers ////////////////////////////////////////////////////
+
+function getFav(prop_id) {
+    console.log('seeking fav', prop_id);
+    var t = false;
+    CLIENT.favorites.forEach(function(item) {
+        if (item === prop_id) {
+            t = true;
+            console.log('this prop is favorited');
+        }
+    });
+    return t;
+}
 
 function getIndexByName(cityname) {
     // console.log(cityname);
@@ -201,6 +346,16 @@ function getIndexByName(cityname) {
     return i;
 }
 
+function getIndexByNameProp(index, propname) {
+    var i;
+    app.main.dataFromServer[index].properties.forEach(function(item, index) {
+        if (item.name === propname) {
+            i = index;
+        }
+    });
+    return i;
+}
+
 function generateUUID() {
     var d = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -209,4 +364,4 @@ function generateUUID() {
         return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
     });
     return uuid;
-};
+}

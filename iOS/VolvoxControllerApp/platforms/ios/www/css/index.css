@@ -3,6 +3,8 @@
   /* make transparent link selection, adjust last value opacity 0 to 1.0 */
   list-style: none;
   text-decoration: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -57,6 +59,7 @@ footer .left {
   width: 50%;
   height: 100%;
   background: url(../img/douglas_logo.png) no-repeat;
+  -webkit-background-size: contain;
   background-size: contain;
   background-position: 50% 50%;
 }

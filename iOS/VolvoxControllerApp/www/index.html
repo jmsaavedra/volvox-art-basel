@@ -16,7 +16,7 @@
             <div class="left"></div>
             <div class="right">
                 <a href="#/share">Share</a> | 
-                <a href="#/about">About</a>
+                <a href="#/cities">About</a>
             </div>
         </footer>
 
@@ -97,15 +97,15 @@
                 <p class="header_title"><%= header_title %></p>
             </header>
             <div class="body">
-                <form id="share_form">
+                <div id="share_form">
                     <label>First name:</label>
-                    <input type="text">
+                    <input type="text" id="share_first_name">
                     <label>Last name:</label>
-                    <input type="text">
+                    <input type="text" id="share_last_name">
                     <label>Email address:</label>
-                    <input type="text">
-                    <input type="submit">
-                </form>
+                    <input type="text" id="share_email">
+                    <input type="submit" id="share_submit">
+                </div>
             </div>
         </script>
 

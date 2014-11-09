@@ -203,6 +203,32 @@ app.main = (function() {
             app.main.updateLS();
         });
 
+        // share
+        $('#share_submit').off('click').on('click', function() {
+            var dataToSend = {
+                firstName: $('#share_first_name').val(),
+                lastName: $('#share_last_name').val(),
+                email: $('#share_email').val(),
+                favorites: CLIENT.favorites
+            };
+            $.ajax({
+                url: CLIENT.server_address + '/share',
+                dataType: 'json',
+                method: 'POST',
+                data: dataToSend,
+                success: function() {
+                    alert('Information sent. The app will now restart.', function() {
+                        window.location.reload();
+                        localStorage.clear();
+                    });
+                },
+                error: function() {
+                    alert('Error. Please check the server.', function() {
+                    });
+                }
+            });
+        });
+
         // action sheet
         $('footer .left').off('click').on('click', function() {
             app.phonegap.actionSheet();
@@ -244,14 +270,14 @@ if (Zepto.os.ios) {
 app.phonegap = (function() {
     var init = function() {
         // replace alert
-        // window.alert = function(message) {
-        //     // console.log('alert');
-        //     if (navigator.notification) {
-        //         navigator.notification.alert(message, null, app.title, 'Dismiss');
-        //     } else {
-        //         alert(app.title ? (app.title + ": " + message) : message);
-        //     }
-        // };
+        window.alert = function(message, cb) {
+            // console.log('alert');
+            if (navigator.notification) {
+                navigator.notification.alert(message, cb(), app.title, 'OK');
+            } else {
+                alert(app.title ? (app.title + ": " + message) : message);
+            }
+        };
     };
     var actionSheet = function() {
         //
@@ -278,7 +304,10 @@ app.phonegap = (function() {
                 } else if (buttonIndex === 3) {
                     CLIENT.screen_id = 2;
                 } else if (buttonIndex === 1) {
-                    window.location.reload();
+                    alert('The app will now restart.', function() {
+                        window.location.reload();
+                        localStorage.clear();
+                    });
                 }
             });
         };
@@ -335,4 +364,4 @@ function generateUUID() {
         return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
     });
     return uuid;
-};
+}

@@ -56,6 +56,18 @@ app.main = (function() {
             if (d.length > 0) {
                 app.main.dataFromServer = d;
                 $(window).trigger('getDataSuccess');
+            } else {
+                // alert('Could not connect to the server. Hit OK to restart.', function() {
+                //     window.location.reload();
+                // });
+                prompt('Could not connect to the server. Please correct the server address.', function(results) {
+                    CLIENT.server_address = results.input1;
+                    app.main.updateLS();
+                    alert('App will now reload.', function() {
+                        window.location.reload();
+                    });
+                    // save to localstorage
+                }, CLIENT.server_address);
             }
         });
     };
@@ -201,6 +213,9 @@ app.main = (function() {
                 CLIENT.favorites = _.unique(CLIENT.favorites);
             }
             app.main.updateLS();
+            // post update
+            $.post(CLIENT.server_address + '/update', CLIENT, function(e) {
+            });
         });
 
         // share
@@ -235,18 +250,6 @@ app.main = (function() {
         $('footer .left').off('click').on('click', function() {
             app.phonegap.actionSheet();
         });
-
-        // off().on() every time REMEMBER?
-        $('.page')
-            .off('webkitTransitionEnd')
-            .one('webkitTransitionEnd', function() {
-                $(this).addClass('end');
-            });
-        $('.end')
-            .off('webkitTransitionEnd')
-            .one('webkitTransitionEnd', function() {
-                $(this).remove();
-            });
     };
 
     return {
@@ -280,6 +283,14 @@ app.phonegap = (function() {
                 alert(app.title ? (app.title + ": " + message) : message);
             }
         };
+        // replace prompt
+        window.prompt = function(message, cb, defaultText) {
+            if (navigator.notification) {
+                navigator.notification.prompt(message, cb, app.title, ['OK'], defaultText);
+            } else {
+                // prompt(app.title ? (app.title + ": " + message) : message);
+            }
+        };
     };
     var actionSheet = function() {
         //
@@ -292,7 +303,7 @@ app.phonegap = (function() {
         }
         var options = {
             title: 'Session: ' + CLIENT.session_id,
-            'buttonLabels': [screenCheck(1), screenCheck(2)],
+            'buttonLabels': [screenCheck(1), screenCheck(2), 'Change Server Address'],
             'addCancelButtonWithLabel': 'Cancel',
             'addDestructiveButtonWithLabel': 'Restart Session'
         };
@@ -308,8 +319,14 @@ app.phonegap = (function() {
                 } else if (buttonIndex === 1) {
                     alert('The app will now restart.', function() {
                         window.location.reload();
-                        localStorage.clear();
+                        // localStorage.clear();
                     });
+                } else if (buttonIndex === 4) {
+                    prompt('Input new server address below.', function(results) {
+                        CLIENT.server_address = results.input1;
+                        app.main.updateLS();
+                        // save to localstorage
+                    }, CLIENT.server_address);
                 }
             });
         };

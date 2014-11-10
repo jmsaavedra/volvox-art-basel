@@ -97,6 +97,19 @@
                 <p class="header_title"><%= header_title %></p>
             </header>
             <div class="body">
+                <!-- list of favs -->
+                <div id="fav_list">
+                    <% _.each(list_fav, function(item) { %>
+                        <li class="fav_item">
+                            <span class="fav_title" data-id="<%= item.id %>">
+                                <%= item.title %>
+                            </span>
+                            <span class="fav_delete">
+                                &times;
+                            </span>
+                        </li>
+                    <% } %>
+                </div>
                 <div id="share_form">
                     <label>First name:</label>
                     <input type="text" id="share_first_name">

@@ -138,3 +138,12 @@ footer .right {
 .prop_info {
   padding: 20px;
 }
+
+#fav_list {
+  padding: 15px 20px 0px 20px;
+  font-size: 1.5em;
+}
+#fav_list .fav_delete {
+  float: right;
+  font-size: 1.5em;
+}

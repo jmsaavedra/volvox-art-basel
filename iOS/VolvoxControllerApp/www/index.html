@@ -99,15 +99,17 @@
             <div class="body">
                 <!-- list of favs -->
                 <div id="fav_list">
-                    <% _.each(list_fav, function(item) { %>
-                        <li class="fav_item">
-                            <span class="fav_title" data-id="<%= item.id %>">
-                                <%= item.title %>
-                            </span>
-                            <span class="fav_delete">
-                                &times;
-                            </span>
-                        </li>
+                    <% if(fav_list.length > 0) { %>
+                        <% _.each(fav_list, function(p_item) { %>
+                            <li class="fav_item" data-id="<%= p_item.id %>">
+                                <span class="fav_title">
+                                    <%= p_item.name %>
+                                </span>
+                                <span class="fav_delete">
+                                    &times;
+                                </span>
+                            </li>
+                        <% }); %>
                     <% } %>
                 </div>
                 <div id="share_form">

@@ -13,19 +13,15 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"Console\"><param name=\"ios-package\" value=\"CDVLogger\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
+                            "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"SplashScreen\"><param name=\"ios-package\" value=\"CDVSplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -38,12 +34,6 @@
                             "xml": "true",
                             "count": 1
                         }
-                    ],
-                    "CoreGraphics.framework": [
-                        {
-                            "xml": "false",
-                            "count": 1
-                        }
                     ]
                 }
             }
@@ -53,16 +43,13 @@
         "nl.x-services.plugins.actionsheet": {
             "PACKAGE_NAME": "com.volvox.artbasel"
         },
-        "org.apache.cordova.device": {
-            "PACKAGE_NAME": "com.volvox.artbasel"
-        },
         "org.apache.cordova.console": {
             "PACKAGE_NAME": "com.volvox.artbasel"
         },
-        "org.apache.cordova.dialogs": {
+        "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.volvox.artbasel"
         },
-        "org.apache.cordova.splashscreen": {
+        "org.apache.cordova.dialogs": {
             "PACKAGE_NAME": "com.volvox.artbasel"
         }
     },

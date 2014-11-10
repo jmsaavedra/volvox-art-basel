@@ -13,12 +13,84 @@ var CLIENT = {
 var app = app || {};
 app.title = 'Douglas Elliman';
 
+// PHONEGAP ////////////////////////////////////////////////////
+app.phonegap = (function() {
+    var init = function() {
+        // replace alert
+        window.alert = function(message, cb) {
+            // console.log('alert');
+            if (navigator.notification) {
+                navigator.notification.alert(message, cb(), app.title, 'OK');
+            } else {
+                alert(app.title ? (app.title + ": " + message) : message);
+            }
+        };
+        // replace prompt
+        window.prompt = function(message, cb, defaultText) {
+            if (navigator.notification) {
+                navigator.notification.prompt(message, cb, app.title, ['OK'], defaultText);
+            } else {
+                // prompt(app.title ? (app.title + ": " + message) : message);
+            }
+        };
+    };
+    var actionSheet = function() {
+        //
+        function screenCheck(n) {
+            if (CLIENT.screen_id === n) {
+                return 'SCREEN ' + n + ' (Selected)';
+            } else {
+                return 'SCREEN ' + n;
+            }
+        }
+        var options = {
+            title: 'Session: ' + CLIENT.session_id,
+            'buttonLabels': [screenCheck(1), screenCheck(2), 'Change Server Address'],
+            'addCancelButtonWithLabel': 'Cancel',
+            'addDestructiveButtonWithLabel': 'Restart Session'
+        };
+        var callback = function(buttonIndex) {
+            setTimeout(function() {
+                // like other Cordova plugins (prompt, confirm) the buttonIndex is 1-based (first button is index 1)
+                // alert('button index clicked: ' + buttonIndex);
+                if (buttonIndex === 2) {
+                    // select screen 1
+                    CLIENT.screen_id = 1;
+                } else if (buttonIndex === 3) {
+                    CLIENT.screen_id = 2;
+                } else if (buttonIndex === 1) {
+                    alert('App restarted.', function() {
+                        CLIENT.favorites = [];
+                        app.main.updateLS();
+                        window.location.reload();
+                        // localStorage.clear();
+                    });
+                } else if (buttonIndex === 4) {
+                    prompt('Input new server address below.', function(results) {
+                        CLIENT.server_address = results.input1;
+                        app.main.updateLS();
+                        // save to localstorage
+                    }, CLIENT.server_address);
+                }
+            });
+        };
+        window.plugins.actionsheet.show(options, callback);
+    };
+    return {
+        init: init,
+        actionSheet: actionSheet
+    };
+})();
+
+///// MAIN ///////
+
 app.main = (function() {
     var dataFromServer = {};
     var _compiled;
     var _template;
     var _objData;
     var init = function() {
+        console.log('APP INIT!');
         // app starts running here
         app.phonegap.init();
         // attach fastClick
@@ -54,8 +126,22 @@ app.main = (function() {
     var initServerCall = function() {
         $.get(CLIENT.server_address + '/init', function(d) {
             if (d.length > 0) {
+                // alert('ok!', function() {});
                 app.main.dataFromServer = d;
                 $(window).trigger('getDataSuccess');
+            } else {
+                // alert('Could not connect to the server. Hit OK to restart.', function() {
+                //     window.location.reload();
+                // });
+                // alert('not ok!', function() {});
+                prompt('Could not connect to the server. Please correct the server address.', function(results) {
+                    CLIENT.server_address = results.input1;
+                    app.main.updateLS();
+                    alert('App will now reload.', function() {
+                        window.location.reload();
+                    });
+                    // save to localstorage
+                }, CLIENT.server_address);
             }
         });
     };
@@ -123,7 +209,10 @@ app.main = (function() {
                         infinite: false,
                         accessibility: true,
                         autoplay: false,
-                        dots: true
+                        dots: true,
+                        onAfterChange: function(i, index) {
+                            console.log(i, index);
+                        }
                     });
                 });
             },
@@ -138,7 +227,8 @@ app.main = (function() {
                     app.main._compiled = _.template(app.main._template, {
                         back: true,
                         server_address: CLIENT.server_address,
-                        header_title: app.main._objData.header
+                        header_title: app.main._objData.header,
+                        fav_list: getFavList(CLIENT.favorites)
                     });
                     $('#view').html(app.main._compiled);
                 });
@@ -193,7 +283,7 @@ app.main = (function() {
                 // remove faved
                 that.removeClass('faved');
                 // remove from CLIENT.favorites
-                CLIENT.favorites.splice(CLIENT.page_id, 1);
+                CLIENT.favorites.splice(CLIENT.favorites.indexOf(CLIENT.page_id), 1);
             } else {
                 // add faved
                 that.addClass('faved');
@@ -201,6 +291,8 @@ app.main = (function() {
                 CLIENT.favorites = _.unique(CLIENT.favorites);
             }
             app.main.updateLS();
+            // post update
+            $.post(CLIENT.server_address + '/update', CLIENT, function(e) {});
         });
 
         // share
@@ -217,15 +309,31 @@ app.main = (function() {
                 method: 'POST',
                 data: dataToSend,
                 success: function() {
-                    alert('Information sent. The app will now restart.', function() {
-                        window.location.reload();
-                        localStorage.clear();
-                    });
+                    // alert('Information sent. The app will now restart.', function() {
+                    //     window.location.reload();
+                    //     localStorage.clear();
+                    // });
                 },
                 error: function() {
-                    alert('Error. Please check the server.', function() {
+                    alert('Information sent. App restarted.', function() {
+                        // clear fav
+                        CLIENT.favorites = [];
+                        app.main.updateLS();
+                        window.location.reload();
+                        // localStorage.clear();
                     });
                 }
+            });
+        });
+
+        // share fav delete
+        $('.fav_delete').off('click').on('click', function() {
+            var idToRemove = $(this).parent().attr('data-id');
+            $(this).parent().slideUp(function() {
+                $(this).remove();
+                // remove from CLIENT.favorites
+                CLIENT.favorites.splice(CLIENT.favorites.indexOf(idToRemove), 1);
+                app.main.updateLS();
             });
         });
 
@@ -233,18 +341,6 @@ app.main = (function() {
         $('footer .left').off('click').on('click', function() {
             app.phonegap.actionSheet();
         });
-
-        // off().on() every time REMEMBER?
-        $('.page')
-            .off('webkitTransitionEnd')
-            .one('webkitTransitionEnd', function() {
-                $(this).addClass('end');
-            });
-        $('.end')
-            .off('webkitTransitionEnd')
-            .one('webkitTransitionEnd', function() {
-                $(this).remove();
-            });
     };
 
     return {
@@ -266,60 +362,25 @@ if (Zepto.os.ios) {
     app.main.init();
 }
 
-// PHONEGAP ////////////////////////////////////////////////////
-app.phonegap = (function() {
-    var init = function() {
-        // replace alert
-        window.alert = function(message, cb) {
-            // console.log('alert');
-            if (navigator.notification) {
-                navigator.notification.alert(message, cb(), app.title, 'OK');
-            } else {
-                alert(app.title ? (app.title + ": " + message) : message);
-            }
-        };
-    };
-    var actionSheet = function() {
-        //
-        function screenCheck(n) {
-            if (CLIENT.screen_id === n) {
-                return 'SCREEN ' + n + ' (Selected)';
-            } else {
-                return 'SCREEN ' + n;
-            }
-        }
-        var options = {
-            title: 'Session: ' + CLIENT.session_id,
-            'buttonLabels': [screenCheck(1), screenCheck(2)],
-            'addCancelButtonWithLabel': 'Cancel',
-            'addDestructiveButtonWithLabel': 'Restart Session'
-        };
-        var callback = function(buttonIndex) {
-            setTimeout(function() {
-                // like other Cordova plugins (prompt, confirm) the buttonIndex is 1-based (first button is index 1)
-                // alert('button index clicked: ' + buttonIndex);
-                if (buttonIndex === 2) {
-                    // select screen 1
-                    CLIENT.screen_id = 1;
-                } else if (buttonIndex === 3) {
-                    CLIENT.screen_id = 2;
-                } else if (buttonIndex === 1) {
-                    alert('The app will now restart.', function() {
-                        window.location.reload();
-                        localStorage.clear();
+// helpers ////////////////////////////////////////////////////
+
+function getFavList(list) {
+    var arr = [];
+    app.main.dataFromServer.forEach(function(city) {
+        city.properties.forEach(function(prop, index) {
+            list.forEach(function(fav) {
+                if(prop.id === fav) {
+                    arr.push({
+                        id: prop.id,
+                        name: prop.name
                     });
                 }
             });
-        };
-        window.plugins.actionsheet.show(options, callback);
-    };
-    return {
-        init: init,
-        actionSheet: actionSheet
-    };
-})();
-
-// helpers ////////////////////////////////////////////////////
+        });
+    });
+    console.log(arr);
+    return arr;
+}
 
 function getFav(prop_id) {
     console.log('seeking fav', prop_id);

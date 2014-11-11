@@ -79,7 +79,7 @@ var send = function(screen, type, name, cb){
 	var route = '/screen_'+screen.toString()+'/'+type.toString();
 	console.log("route: "+route);
 
-	if(route === lastOscMessageSent){
+	if(route === lastOscMessageSent && type !== 'left' && type !== 'right'){
 			console.log("duplicate OSC route message detected".red);
 			cb(null, null, null);
 	} else {

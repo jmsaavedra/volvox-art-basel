@@ -50,11 +50,6 @@ var init = function( LOCATIONS, dropboxDir, OSC ){
 */
 var update = function(LOCATIONS, OSC){
 
-  //get screen from req.query
-  //var type = "[location/property/img/like/share]";// get from busboy Field
-  //var location = "[/DIR/TO/LOC/OR/IMAGE]";// get from busboy Field
-
-
   return function(req, res){
     console.log("/update POST received".cyan);
     var allLocs = LOCATIONS.all();
@@ -62,7 +57,7 @@ var update = function(LOCATIONS, OSC){
     var pageId = "pageId";
     var oscRoute = "oscRoute";
     var screenId = "screenId";
-    var location = "location"; //not using this
+    var imgSwipe = null;
 
     var busboy = new Busboy({ headers: req.headers });
 
@@ -79,24 +74,35 @@ var update = function(LOCATIONS, OSC){
           screenId = val.toString();
           break;
 
+        case 'img_direction':
+          imgSwipe = val.toString();
+          break;
+
         default:
-          // console.log("unrecognized field")
+          // console.log("unrecognized field".red)
           break;
       }
     });
     busboy.on('finish', function() {
       console.log('Done parsing form!'.green);
-
-      processOscRoute(LOCATIONS, pageId, function(route){
-        //console.log("created route: ".cyan + route);
-        OSC.send(screenId, route, location, function(addr, type, name){
+      if(!imgSwipe) {
+        processOscRoute(LOCATIONS, pageId, function(route){
+          //console.log("created route: ".cyan + route);
+          OSC.send(screenId, route, "", function(addr, type, name){
+            if (addr != null)
+              console.log(" OSC SENT ".green.inverse +" route: "+ addr);
+            //else
+              //console.log(" OSC NOT SENT SENT ".red.inverse +" route: "+ addr);
+          })
+          res.status(200).send("/update OK")
+        });
+      } else {
+        OSC.send(screenId, imgSwipe, "", function(addr, type, name){
           if (addr != null)
             console.log(" OSC SENT ".green.inverse +" route: "+ addr);
-          //else
-            //console.log(" OSC NOT SENT SENT ".red.inverse +" route: "+ addr);
         })
         res.status(200).send("/update OK")
-      });
+      }
     });
     req.pipe(busboy);
 

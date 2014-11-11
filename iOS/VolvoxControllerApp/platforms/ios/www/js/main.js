@@ -267,6 +267,7 @@ app.main = (function() {
                         back: true,
                         header_title: app.main._objData.header
                     });
+                    $.post(CLIENT.server_address + '/about', CLIENT, function(e) {});
                     $('#view').html(app.main._compiled);
                 });
             }

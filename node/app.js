@@ -71,11 +71,12 @@ app.get ( '/init'     , client.init( LOCATIONS, DropBoxDirectory, OSC ));
 app.post( '/update'   , client.update( LOCATIONS, OSC ));
 app.post( '/favorite' , client.favorite( LOCATIONS, OSC ));
 app.post( '/share'    , client.share( LOCATIONS, OSC ));
-app.get ( '/about'    , client.about( LOCATIONS, OSC ));
+app.post( '/about'    , client.about( LOCATIONS, OSC ));
 
 //admin (BROWSER) routes
 app.get ( '/'         , admin.index( LOCATIONS, OSC ));
 app.get ( '/like/:id' , admin.like( LOCATIONS, OSC));  // :property.id
+app.get ( '/about'    , client.about( LOCATIONS, OSC ));
 app.get ( '/location/:id', admin.location(LOCATIONS, OSC));
 app.get ( '/property/:id', admin.property(LOCATIONS, OSC));
 app.get ( '/property/:id/:imgid', admin.image(LOCATIONS, OSC));

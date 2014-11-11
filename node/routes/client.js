@@ -246,20 +246,39 @@ var share = function(LOCATIONS, OSC){
 */
 var about = function(LOCATIONS, OSC){
 
-
-
   return function(req, res){
+
+    var screenId;
     console.log("/about received".cyan);
-    var allLocs = LOCATIONS.all();
-    //get screen from req.query
-    var screen = 1;
-    OSC.send(screen, "about", 1, function(addr, type, name){
-      if (addr != null)
-        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
-    })
+    var busboy = new Busboy({ headers: req.headers });
 
+    busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+      console.log('Field [' + fieldname + ']: value: ' + inspect(val));
 
-    res.status(200).send("hit /about")
+      switch(fieldname){
+
+        case 'screen_id':
+          screenId = val.toString();
+          break;
+
+        default:
+          // console.log("unrecognized field".red)
+          break;
+      }
+    });
+    busboy.on('finish', function() {
+      console.log('Done parsing form!'.green);
+
+      OSC.send(screenId, "about", "", function(addr, type, name){
+        if (addr != null)
+          console.log(" OSC SENT ".green.inverse +" route: "+ addr+"\n");
+        //else
+          //console.log(" OSC NOT SENT SENT ".red.inverse +" route: "+ addr);
+      })
+      res.status(200).send("/update OK")
+
+    });
+    req.pipe(busboy);
   }
 }
 

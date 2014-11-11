@@ -6,7 +6,7 @@ var CLIENT = {
     server_address: 'http://localhost:8080',
     page_id: '',
     img_id: '',
-    img_direction: '',
+    img_direction: null,
     screen_id: 1,
     favorites: []
 };
@@ -126,6 +126,7 @@ app.main = (function() {
     var updateLS = function() {
         console.log('update LS');
         // replacing ['app'] with new CLIENT
+        CLIENT.img_direction = null;
         localStorage['app'] = JSON.stringify(CLIENT);
     };
 

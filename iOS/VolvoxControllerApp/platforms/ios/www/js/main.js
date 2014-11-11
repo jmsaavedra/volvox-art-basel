@@ -3,8 +3,10 @@
 // GLOBAL FOR CLIENT =================================//
 var CLIENT = {
     session_id: '',
-    server_address: 'http://localhost:8080',
+    server_address: 'http://192.168.2.243:8080',
     page_id: '',
+    img_id: '',
+    img_direction: null,
     screen_id: 1,
     favorites: []
 };
@@ -12,7 +14,6 @@ var CLIENT = {
 
 var app = app || {};
 app.title = 'Douglas Elliman';
-
 // PHONEGAP ////////////////////////////////////////////////////
 app.phonegap = (function() {
     var init = function() {
@@ -45,7 +46,7 @@ app.phonegap = (function() {
         }
         var options = {
             title: 'Session: ' + CLIENT.session_id,
-            'buttonLabels': [screenCheck(1), screenCheck(2), 'Change Server Address'],
+            'buttonLabels': [screenCheck(1), screenCheck(2), 'Change Server Address', 'Reset App'],
             'addCancelButtonWithLabel': 'Cancel',
             'addDestructiveButtonWithLabel': 'Restart Session'
         };
@@ -71,6 +72,11 @@ app.phonegap = (function() {
                         app.main.updateLS();
                         // save to localstorage
                     }, CLIENT.server_address);
+                } else if (buttonIndex === 5) {
+                    localStorage.clear();
+                    alert('App reset. Cache cleared.', function() {
+                        window.location.reload();
+                    });
                 }
             });
         };
@@ -120,6 +126,7 @@ app.main = (function() {
     var updateLS = function() {
         console.log('update LS');
         // replacing ['app'] with new CLIENT
+        CLIENT.img_direction = null;
         localStorage['app'] = JSON.stringify(CLIENT);
     };
 
@@ -151,6 +158,7 @@ app.main = (function() {
             // all locations
             '/cities': function() {
                 console.log('Page: cities');
+                app.main.updateLS();
                 CLIENT.page_id = 'allLocation';
                 render({
                     tpl: 'tpl-list-locations',
@@ -168,6 +176,7 @@ app.main = (function() {
             '/cities/:city': function(city) {
                 // show list of properties in that city
                 console.log('Page: ' + city);
+                app.main.updateLS();
                 CLIENT.page_id = app.main.dataFromServer[getIndexByName(city)].id;
                 render({
                     tpl: 'tpl-list-props',
@@ -187,6 +196,7 @@ app.main = (function() {
             '/cities/:city/:property': function(city, property) {
                 // show detail page of property
                 console.log('Page: ' + property);
+                app.main.updateLS();
                 var cityIndex = getIndexByName(city);
                 var propertyIndex = getIndexByNameProp(cityIndex, property);
                 CLIENT.page_id = app.main.dataFromServer[cityIndex].properties[propertyIndex].id;
@@ -205,19 +215,30 @@ app.main = (function() {
                     });
                     $('#view').html(app.main._compiled);
                     // start slick
+                    var img_init_index = 0;
                     $('.slick_carousel').slick({
                         infinite: false,
                         accessibility: true,
                         autoplay: false,
                         dots: true,
                         onAfterChange: function(i, index) {
-                            console.log(i, index);
+                            // console.log(i, index);
+                            if (index > img_init_index) {
+                                CLIENT.img_direction = 'right';
+                                console.log('right');
+                            } else if (index < img_init_index) {
+                                CLIENT.img_direction = 'left';
+                                console.log('left');
+                            }
+                            $.post(CLIENT.server_address + '/update', CLIENT, function(e) {});
+                            img_init_index = index;
                         }
                     });
                 });
             },
             '/share': function() {
                 console.log('Page: /share');
+                app.main.updateLS();
                 render({
                     tpl: 'tpl-share',
                     header: 'Share',
@@ -229,6 +250,22 @@ app.main = (function() {
                         server_address: CLIENT.server_address,
                         header_title: app.main._objData.header,
                         fav_list: getFavList(CLIENT.favorites)
+                    });
+                    $('#view').html(app.main._compiled);
+                });
+            },
+            '/about': function() {
+                console.log('Page: /about');
+                app.main.updateLS();
+                render({
+                    tpl: 'tpl-about',
+                    header: 'About',
+                    page: 'about',
+                    back: true
+                }, function() {
+                    app.main._compiled = _.template(app.main._template, {
+                        back: true,
+                        header_title: app.main._objData.header
                     });
                     $('#view').html(app.main._compiled);
                 });
@@ -292,7 +329,7 @@ app.main = (function() {
             }
             app.main.updateLS();
             // post update
-            $.post(CLIENT.server_address + '/update', CLIENT, function(e) {});
+            $.post(CLIENT.server_address + '/favorite', CLIENT, function(e) {});
         });
 
         // share
@@ -309,10 +346,13 @@ app.main = (function() {
                 method: 'POST',
                 data: dataToSend,
                 success: function() {
-                    // alert('Information sent. The app will now restart.', function() {
-                    //     window.location.reload();
-                    //     localStorage.clear();
-                    // });
+                    alert('Information sent. App restarted.', function() {
+                        // clear fav
+                        CLIENT.favorites = [];
+                        app.main.updateLS();
+                        window.location.reload();
+                        // localStorage.clear();
+                    });
                 },
                 error: function() {
                     alert('Information sent. App restarted.', function() {
@@ -369,7 +409,7 @@ function getFavList(list) {
     app.main.dataFromServer.forEach(function(city) {
         city.properties.forEach(function(prop, index) {
             list.forEach(function(fav) {
-                if(prop.id === fav) {
+                if (prop.id === fav) {
                     arr.push({
                         id: prop.id,
                         name: prop.name

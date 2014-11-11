@@ -3,10 +3,10 @@
 // GLOBAL FOR CLIENT =================================//
 var CLIENT = {
     session_id: '',
-    server_address: 'http://localhost:8080',
+    server_address: 'http://192.168.2.243:8080',
     page_id: '',
     img_id: '',
-    img_direction: 'null',
+    img_direction: null,
     screen_id: 1,
     favorites: []
 };
@@ -126,7 +126,7 @@ app.main = (function() {
     var updateLS = function() {
         console.log('update LS');
         // replacing ['app'] with new CLIENT
-        CLIENT.img_direction = 'null';
+        CLIENT.img_direction = null;
         localStorage['app'] = JSON.stringify(CLIENT);
     };
 
@@ -329,7 +329,7 @@ app.main = (function() {
             }
             app.main.updateLS();
             // post update
-            $.post(CLIENT.server_address + '/update', CLIENT, function(e) {});
+            $.post(CLIENT.server_address + '/favorite', CLIENT, function(e) {});
         });
 
         // share

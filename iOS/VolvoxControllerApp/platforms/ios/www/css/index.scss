@@ -67,7 +67,9 @@ footer {
 }
 
 .body {
-    margin-top: 57px;
+    padding: 57px 0px;
+    height: 100%;
+    overflow-y: scroll;
     // padding: 5px 10px 60px 10px;
     a:nth-child(odd) {
         .list_title {
@@ -107,18 +109,23 @@ footer {
 
 // prop info
 .prop_info {
-    height: 100%;
-    overflow-y: scroll;
+    // height: 100%;
+    // overflow-y: scroll;
 }
 
 // back button
 .backBtn {
     position: absolute;
-    top: 27px;
-    left: 20px;
+    top: 0px;
+    left: 0px;
+    padding: 28px 25px 10px 20px;
     color: #1f5fc5;
     font-size: 1.25em;
     cursor: pointer;
+}
+
+.backBtn:active {
+    font-weight: 800;
 }
 
 // favBtn

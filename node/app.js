@@ -19,8 +19,8 @@ console.log("\n******  INIT VOLVOX SERVER  *****".zebra);
 //
 */
 // var DropBoxDirectory = "C:/Users/WS_5/Dropbox/STRUCTURE/LOCATIONS"; //VOLVOX!!
- // var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATIONS"; //JOE!!
-var DropBoxDirectory = "/Volumes/Dropbox/Dropbox/STRUCTURE/LOCATIONS"; // APON !!
+var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATIONS"; //JOE!!
+//var DropBoxDirectory = "/Volumes/Dropbox/Dropbox/STRUCTURE/LOCATIONS"; // APON !!
 
 
 /***
@@ -66,19 +66,19 @@ var client = require('./routes/client');
 //
 */
 
-
-app.get ( '/'         , admin.index( LOCATIONS, OSC ));
+//client ( iOS ) routes
 app.get ( '/init'     , client.init( LOCATIONS, DropBoxDirectory, OSC ));
 app.post( '/update'   , client.update( LOCATIONS, OSC ));
+app.post( '/favorite' , client.favorite( LOCATIONS, OSC ));
 app.post( '/share'    , client.share( LOCATIONS, OSC ));
 app.get ( '/about'    , client.about( LOCATIONS, OSC ));
 
-//TODO: this is a hack just for my browser prototype. property id will be passed in via POST.
-app.get ( '/like/:id' , client.like( LOCATIONS, OSC));  // :property.id
-
-app.get('/location/:id', admin.location(LOCATIONS, OSC));
-app.get('/property/:id', admin.property(LOCATIONS, OSC));
-app.get('/property/:id/:imgid', admin.image(LOCATIONS, OSC));
+//admin (BROWSER) routes
+app.get ( '/'         , admin.index( LOCATIONS, OSC ));
+app.get ( '/like/:id' , admin.like( LOCATIONS, OSC));  // :property.id
+app.get ( '/location/:id', admin.location(LOCATIONS, OSC));
+app.get ( '/property/:id', admin.property(LOCATIONS, OSC));
+app.get ( '/property/:id/:imgid', admin.image(LOCATIONS, OSC));
 
 
 /***

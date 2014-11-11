@@ -10,10 +10,12 @@ var dir = require('node-dir');
 var _		= require('underscore');
 var async = require('async');
 var slug = require('slug');
+var path = require('path');
 
 var Locations = [];
 var Properties = [];
 
+var visitorLogFilePath;
 
 /***
 // setup
@@ -21,6 +23,8 @@ var Properties = [];
 */
 var setup = function(dropboxDirectory, cb){
 	console.log("\nLooking for Dropbox in Directory:\n~".yellow+dropboxDirectory);
+
+	// console.log( new Date().toString("hh:mm tt"));
 
 	Locations = [];
 
@@ -34,6 +38,16 @@ var setup = function(dropboxDirectory, cb){
 	// console.log(stats);
 	if (fs.existsSync(dropboxDirectory)) {
 	// if(stats.isDirectory()){
+		visitorLogFilePath = path.dirname(dropboxDirectory)+"/VISITOR\ LOGS/visitor_log.txt";
+
+		fs.open(visitorLogFilePath, 'a', function(err, fd){
+			if(err) console.log("error creating visitor log file: ".red + err);
+			else {
+				//console.log("created file: "+visitorLogFilePath);
+				fs.close(fd);
+			}
+		})
+
 		var locs = _.sortBy(_.without(fs.readdirSync(dropboxDirectory), ".DS_Store"), function(name){return name});
 
 		async.eachSeries(locs, function(loc, callback){
@@ -175,10 +189,10 @@ String.prototype.capitalize = function() {
 		return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 }
 
-var getOscRoute = function(id, cb){
 
-	var thisRoute = id;
-	cb(thisRoute);
+var getVisitorLog = function(){
+
+	return visitorLogFilePath;
 }
 
 /***
@@ -189,5 +203,5 @@ module.exports = {
 	all: all,
 	setup: setup,
 	getPropertyById: getPropertyById,
-	getOscRoute: getOscRoute
+	getVisitorLog: getVisitorLog
 }

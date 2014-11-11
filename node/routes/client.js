@@ -11,6 +11,7 @@ var path    = require('path');
 var fs      = require('fs');
 var inspect = require('util').inspect;
 var Busboy = require('busboy');
+var async = require('async');
 
 /***
 // INIT
@@ -90,7 +91,7 @@ var update = function(LOCATIONS, OSC){
           //console.log("created route: ".cyan + route);
           OSC.send(screenId, route, "", function(addr, type, name){
             if (addr != null)
-              console.log(" OSC SENT ".green.inverse +" route: "+ addr);
+              console.log(" OSC SENT ".green.inverse +" route: "+ addr+"\n");
             //else
               //console.log(" OSC NOT SENT SENT ".red.inverse +" route: "+ addr);
           })
@@ -99,7 +100,7 @@ var update = function(LOCATIONS, OSC){
       } else {
         OSC.send(screenId, imgSwipe, "", function(addr, type, name){
           if (addr != null)
-            console.log(" OSC SENT ".green.inverse +" route: "+ addr);
+            console.log(" OSC SENT ".green.inverse +" route: "+ addr+"\n");
         })
         res.status(200).send("/update OK")
       }
@@ -110,7 +111,7 @@ var update = function(LOCATIONS, OSC){
 }
 
 var processOscRoute = function(LOCATIONS, page, cb){
-  var finishedRoute = ""
+  var finishedRoute = "";
 
   //console.log("index: "+page.indexOf(" "));
 
@@ -123,7 +124,7 @@ var processOscRoute = function(LOCATIONS, page, cb){
     finishedRoute = page;
     cb(finishedRoute);
   } else if ( page.indexOf("pro") == 0) { // /locId/propId
-    console.log("got a property: ".cyan+page);
+    // console.log("got a property: ".cyan+page);
     LOCATIONS.getPropertyById(page, function(e, property){
       if(!e){
         console.log("found property: ".cyan + property.id);
@@ -140,9 +141,8 @@ var processOscRoute = function(LOCATIONS, page, cb){
     finishedRoute = "/left/right";
     cb(finishedRoute);
   }
-
-
 }
+
 
 /***
 // SHARE
@@ -157,37 +157,80 @@ var processOscRoute = function(LOCATIONS, page, cb){
 var share = function(LOCATIONS, OSC){
 
 
-  var screen = 1;     // get from busboy Field
-  var type = "share"; // share event
-  var location = 0;   // no location
+  // var screen = 1;     // get from busboy Field
+  // var type = "share"; // share event
+  // var location = 0;   // no location
 
-  var visitor = {     // placeholder visitor object
-    first_name: "first",
-    last_name: "last",
-    email: "name@addr.com",
-    properties: [
-      {"PATH/TO/LOC/":"1401 Myrtle ave"},
-      {"PATH/TO/LOC/":"71 Ocean Dr"}
-    ]
-  }
 
   return function(req, res){
     console.log("/share POST received".cyan);
 
     var allLocs = LOCATIONS.all();
+    var formattedTime;
+    var currTime = new Date();
+    formattedTime = currTime.getDate() + currTime.getMonth() + currTime.getYear() + " - "+ currTime.getHours()+":"+currTime.getMinutes();
+    var favoritedProperties = [];
+    var visitor = {     // placeholder visitor object
+      first_name: "first",
+      last_name: "last",
+      email: "name@addr.com",
+      time: currTime.toString("hh:mm tt"),
+      properties: []
+    }
+
 
     var busboy = new Busboy({ headers: req.headers });
 
     busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
       console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+      switch(fieldname){
+
+        case 'firstName':
+          visitor.first_name = val.toString();
+          break;
+
+        case 'lastName':
+          visitor.last_name = val.toString();
+          break;
+
+        case 'email':
+          visitor.email = val.toString();
+          break;
+
+        case 'favorites[]':
+          favoritedProperties.push(val.toString());
+          break;
+
+        default:
+
+          break;
+      }
     });
     busboy.on('finish', function() {
       console.log('Done parsing form!'.green);
+      async.eachSeries(favoritedProperties, function(prop, callback){
 
-      OSC.send(screen, type, location, function(addr, type, name){
-        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
+          LOCATIONS.getPropertyById(prop, function(e, fullProp){
+            visitor.properties.push(fullProp.name);
+            callback();
+          })
+      }, function(_err){ //finished with all properties
+        if(!_err){
+
+          fs.appendFile(LOCATIONS.getVisitorLog(), ","+JSON.stringify(visitor, null, '\t'), function (err) {
+            if(err) console.log("error saving to visitor log: ".red + err);
+            res.status(200).send("/share OK")
+          });
+        }
+        else console.log("error iterating properties: ".red+_err);
       })
-      res.status(200).send("/share OK")
+
+      // OSC.send(screen, type, location, function(addr, type, name){
+      //   if (addr != null)
+      //     console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
+      // })
+
+
     });
     req.pipe(busboy);
 
@@ -208,7 +251,8 @@ var about = function(LOCATIONS, OSC){
     //get screen from req.query
     var screen = 1;
     OSC.send(screen, "about", 1, function(addr, type, name){
-      console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
+      if (addr != null)
+        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
     })
 
 
@@ -217,36 +261,67 @@ var about = function(LOCATIONS, OSC){
 }
 
 /***
-// LIKE
+// FAVORITE
 //
 */
-var like = function(LOCATIONS, OSC){
+var favorite = function(LOCATIONS, OSC){
 
   return function(req, res){
-    console.log("/like received".cyan);
-    var allLocs = LOCATIONS.all();
+    console.log("/favorite POST received".cyan);
+    var busboy = new Busboy({ headers: req.headers });
 
-    //get screen from req.query
-    var screen = 1;
-    var property = req.params.id;
-    console.log("got id: "+ property);
+    busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+      console.log('Field [' + fieldname + ']: value: ' + inspect(val));
 
-    LOCATIONS.getPropertyById(property, function(e, _property){
-      console.log("got property: ".green + JSON.stringify(_property, null, '\t'));
+      switch(fieldname){
 
-      OSC.send(screen, "/"+_property.parent_id+"/"+_property.count+"/"+"like", property, function(addr, type, name){
-        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
-      })
-      res.render('locations/index',
-        { title: 'Douglas Elliman Controller',
-          slug: 'property',
-          property: _property
-        }
-      );
+        case 'page_id':
+          pageId = val.toString();
+          break;
+
+        case 'screen_id':
+          screenId = val.toString();
+          break;
+
+        case 'img_direction':
+          imgSwipe = val.toString();
+          break;
+
+        default:
+          // console.log("unrecognized field".red)
+          break;
+      }
     });
-    //res.status(200).send("hit /like")
+    busboy.on('finish', function() {
+      console.log('Done parsing form!'.green);
+      if(!imgSwipe) {
+        processOscRoute(LOCATIONS, pageId, function(route){
+          //console.log("created route: ".cyan + route);
+          route += "/like";
+          OSC.send(screenId, route, "", function(addr, type, name){
+            if (addr != null)
+              console.log(" OSC SENT ".green.inverse +" route: "+ addr+"\n");
+            //else
+              //console.log(" OSC NOT SENT SENT ".red.inverse +" route: "+ addr);
+          })
+          res.status(200).send("/update OK")
+        });
+      } else {
+        OSC.send(screenId, imgSwipe, "", function(addr, type, name){
+          if (addr != null)
+            console.log(" OSC SENT ".green.inverse +" route: "+ addr+"\n");
+        })
+        res.status(200).send("/update OK")
+      }
+    });
+    req.pipe(busboy);
+
   }
 }
+
+
+
+
 
 
 
@@ -259,6 +334,6 @@ module.exports = {
   init: init,
   update: update,
   share: share,
-  like: like,
+  favorite: favorite,
   about: about
 }

@@ -162,6 +162,40 @@ var image = function(LOCATIONS, OSC){
   }
 }
 
+
+/***
+// LIKE
+//
+*/
+var like = function(LOCATIONS, OSC){
+
+  return function(req, res){
+    console.log("/like received".cyan);
+    var allLocs = LOCATIONS.all();
+
+    //get screen from req.query
+    var screen = 1;
+    var property = req.params.id;
+    console.log("got id: "+ property);
+
+    LOCATIONS.getPropertyById(property, function(e, _property){
+      console.log("got property: ".green + JSON.stringify(_property, null, '\t'));
+
+      OSC.send(screen, _property.parent_id+"/"+_property.count+"/"+"like", property, function(addr, type, name){
+        if (addr != null)
+          console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
+      })
+      res.render('locations/index',
+        { title: 'Douglas Elliman Controller',
+          slug: 'property',
+          property: _property
+        }
+      );
+    });
+    //res.status(200).send("hit /like")
+  }
+}
+
 /***
 // MODULE EXPORTS
 //
@@ -169,6 +203,7 @@ var image = function(LOCATIONS, OSC){
 module.exports = {
   index: index,
   location: location,
+  like: like,
   property: property,
   image: image
 

@@ -217,9 +217,12 @@ var share = function(LOCATIONS, OSC){
       }, function(_err){ //finished with all properties
         if(!_err){
 
-          fs.appendFile(LOCATIONS.getVisitorLog(), ","+JSON.stringify(visitor, null, '\t'), function (err) {
+          fs.appendFile(LOCATIONS.getVisitorLog(), ","+ JSON.stringify(visitor, null, '\t'), function (err) {
             if(err) console.log("error saving to visitor log: ".red + err);
-            res.status(200).send("/share OK")
+            else {
+              console.log(" visitor saved: ".green.inverse + JSON.stringify(visitor, null, '\t')+'\n');
+              res.status(200).send("/share OK")
+            }
           });
         }
         else console.log("error iterating properties: ".red+_err);

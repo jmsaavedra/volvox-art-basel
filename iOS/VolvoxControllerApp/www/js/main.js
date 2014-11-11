@@ -340,10 +340,13 @@ app.main = (function() {
                 method: 'POST',
                 data: dataToSend,
                 success: function() {
-                    // alert('Information sent. The app will now restart.', function() {
-                    //     window.location.reload();
-                    //     localStorage.clear();
-                    // });
+                    alert('Information sent. App restarted.', function() {
+                        // clear fav
+                        CLIENT.favorites = [];
+                        app.main.updateLS();
+                        window.location.reload();
+                        // localStorage.clear();
+                    });
                 },
                 error: function() {
                     alert('Information sent. App restarted.', function() {

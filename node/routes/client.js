@@ -51,37 +51,95 @@ var init = function( LOCATIONS, dropboxDir, OSC ){
 var update = function(LOCATIONS, OSC){
 
   //get screen from req.query
-  var screen = 1; // get from busboy Field
-  var type = "[location/property/img/like/share]";// get from busboy Field
-  var location = "[/DIR/TO/LOC/OR/IMAGE]";// get from busboy Field
-
+  //var type = "[location/property/img/like/share]";// get from busboy Field
+  //var location = "[/DIR/TO/LOC/OR/IMAGE]";// get from busboy Field
 
 
   return function(req, res){
     console.log("/update POST received".cyan);
     var allLocs = LOCATIONS.all();
 
+    var pageId = "pageId";
+    var oscRoute = "oscRoute";
+    var screenId = "screenId";
+    var location = "location"; //not using this
+
     var busboy = new Busboy({ headers: req.headers });
 
     busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
       console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+
+      switch(fieldname){
+
+        case 'page_id':
+          pageId = val.toString();
+
+          // LOCATIONS.getOscRoute(val.toString(), function(route){
+          //   oscRoute = route.toString();
+          // });
+          break;
+
+        case 'screen_id':
+          screenId = val.toString();
+          break;
+
+        default:
+          // console.log("unrecognized field")
+          break;
+
+      }
+
     });
     busboy.on('finish', function() {
       console.log('Done parsing form!'.green);
 
-      OSC.send(screen, type, location, function(addr, type, name){
-        console.log(" OSC SENT ".green.inverse +" route: "+ addr + "  msg: ".green+type+" "+name+'\n');
-      })
-
-
-      res.status(200).send("/update OK")
+      processOscRoute(LOCATIONS, pageId, function(route){
+        //console.log("created route: ".cyan + route);
+        OSC.send(screenId, route, location, function(addr, type, name){
+          console.log(" OSC SENT ".green.inverse +" route: "+ addr);
+        })
+        res.status(200).send("/update OK")
+      });
     });
     req.pipe(busboy);
 
   }
 }
 
+var processOscRoute = function(LOCATIONS, page, cb){
+  var finishedRoute = ""
 
+  //console.log("index: "+page.indexOf(" "));
+
+  if (page === 'allLocation'){ //   /home
+    console.log("got home: ".cyan+page);
+    finishedRoute = 'home';
+    cb(finishedRoute);
+  } else if ( page.indexOf("loc") == 0 ) { // /locId
+    console.log("got a location: ".cyan+page);
+    finishedRoute = page;
+    cb(finishedRoute);
+  } else if ( page.indexOf("pro") == 0) { // /locId/propId
+    console.log("got a property: ".cyan+page);
+    LOCATIONS.getPropertyById(page, function(e, property){
+      if(!e){
+        console.log("found property: ".cyan + property.id);
+        finishedRoute = property.parent_id+"/"+property.count;
+        cb(finishedRoute);
+      } else {
+        console.log("ERROR when looking up property: ".red + e);
+        cb(finishedRoute);
+      }
+    });
+  }
+  else { //we're an image most likely //  /left or /right
+    console.log("got image: ".cyan+page);
+    finishedRoute = "/left/right";
+    cb(finishedRoute);
+  }
+
+
+}
 
 /***
 // SHARE

@@ -46,7 +46,7 @@ var setup = function(dropboxDirectory, cb){
 			locId++;
 
 			//get properties for this loc
-			var theseProps = _.sortBy(_.without(fs.readdirSync(dropboxDirectory+"/"+loc), ".DS_Store"), function(name){return name});
+			var theseProps = _.sortBy(_.without(fs.readdirSync(dropboxDirectory+"/"+loc), '.DS_Store'), function(name){return name});
 			var propCount = 0;
 
 			async.eachSeries(theseProps, function(prop, _callback){
@@ -59,7 +59,7 @@ var setup = function(dropboxDirectory, cb){
 				thisProp.parent_name = loc;
 				thisProp.id = "property_"+propId.toString();
 				thisProp.count = "prop"+propCount.toString();
-				var imgs = _.without(fs.readdirSync(thisProp.dir), "info.txt");
+				var imgs = _.without(fs.readdirSync(thisProp.dir), 'info.txt', '.DS_Store');
 				imgs.forEach(function(img, i){
 					imgs[i] = {id: "img_"+imgId.toString(), url: "/"+loc+"/"+prop+"/"+imgs[i]};
 					imgId++;
@@ -73,7 +73,10 @@ var setup = function(dropboxDirectory, cb){
 						console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
 					}
 				});
-				thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
+				var rawInfo = fs.readFileSync(thisProp.dir+"/info.txt").toString();
+				var find = '\n' // find this line break in info file
+				var reg = new RegExp(find, 'g');
+				thisProp.info = rawInfo.replace(reg, '<br>'); //replace with <br> to add visual breaks
 				propId ++; //global property id
 				propCount++; //this location property id
 				thisLocProps.push(thisProp);
@@ -161,7 +164,7 @@ var getPropertyById = function(id, cb){
 		if(!err){
 			//console.log("found property: ".white.inverse+property);
 			if(property!=null) cb(null, property)
-			else cb(null, null);
+			else cb("null property found when looping for "+id, null);
 		}
 		else cb(err, null);
 	});
@@ -172,6 +175,12 @@ String.prototype.capitalize = function() {
 		return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 }
 
+var getOscRoute = function(id, cb){
+
+	var thisRoute = id;
+	cb(thisRoute);
+}
+
 /***
 // MODULE EXPORTS
 //
@@ -179,5 +188,6 @@ String.prototype.capitalize = function() {
 module.exports = {
 	all: all,
 	setup: setup,
-	getPropertyById: getPropertyById
+	getPropertyById: getPropertyById,
+	getOscRoute: getOscRoute
 }

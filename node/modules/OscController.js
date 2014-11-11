@@ -66,7 +66,9 @@ var setup = function(sendAddr, sendPort, recvPort){
 */
 var send = function(screen, type, name, cb){
 	console.log("sending OSC to port ".yellow + SEND_PORT)
+	console.log('screen: '+screen);
 	console.log('type: '+type);
+	console.log('name: '+name);
 	//*** option 1 ***//
 	// var route = '/screen_'+screen.toString();
 	// emitter.emit(route, type, name);

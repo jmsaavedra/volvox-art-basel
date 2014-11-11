@@ -6,7 +6,7 @@ var CLIENT = {
     server_address: 'http://localhost:8080',
     page_id: '',
     img_id: '',
-    img_direction: null,
+    img_direction: 'null',
     screen_id: 1,
     favorites: []
 };
@@ -126,7 +126,7 @@ app.main = (function() {
     var updateLS = function() {
         console.log('update LS');
         // replacing ['app'] with new CLIENT
-        CLIENT.img_direction = null;
+        CLIENT.img_direction = 'null';
         localStorage['app'] = JSON.stringify(CLIENT);
     };
 
@@ -158,6 +158,7 @@ app.main = (function() {
             // all locations
             '/cities': function() {
                 console.log('Page: cities');
+                app.main.updateLS();
                 CLIENT.page_id = 'allLocation';
                 render({
                     tpl: 'tpl-list-locations',
@@ -175,6 +176,7 @@ app.main = (function() {
             '/cities/:city': function(city) {
                 // show list of properties in that city
                 console.log('Page: ' + city);
+                app.main.updateLS();
                 CLIENT.page_id = app.main.dataFromServer[getIndexByName(city)].id;
                 render({
                     tpl: 'tpl-list-props',
@@ -194,6 +196,7 @@ app.main = (function() {
             '/cities/:city/:property': function(city, property) {
                 // show detail page of property
                 console.log('Page: ' + property);
+                app.main.updateLS();
                 var cityIndex = getIndexByName(city);
                 var propertyIndex = getIndexByNameProp(cityIndex, property);
                 CLIENT.page_id = app.main.dataFromServer[cityIndex].properties[propertyIndex].id;
@@ -235,6 +238,7 @@ app.main = (function() {
             },
             '/share': function() {
                 console.log('Page: /share');
+                app.main.updateLS();
                 render({
                     tpl: 'tpl-share',
                     header: 'Share',
@@ -252,6 +256,7 @@ app.main = (function() {
             },
             '/about': function() {
                 console.log('Page: /about');
+                app.main.updateLS();
                 render({
                     tpl: 'tpl-about',
                     header: 'About',

@@ -26,9 +26,10 @@ var SEND_ADDR,
 // // var SEND_IP = '192.168.0.3'; //dev
 // var SEND_PORT = 7000;
 // var RECV_PORT = 7001;
-// var receiver;
-// var emitter;
+var receiver;
+var emitter;
 
+var lastOscMessageSent = "";
 
 
 var setup = function(sendAddr, sendPort, recvPort){
@@ -77,9 +78,16 @@ var send = function(screen, type, name, cb){
 	//*** option 2 ***//
 	var route = '/screen_'+screen.toString()+'/'+type.toString();
 	console.log("route: "+route);
-	emitter.emit(route, 1);
-	setTimeout( function(){ emitter.emit(route, 0) }, 25);
-	cb(route, type, name);
+
+	if(route === lastOscMessageSent){
+			console.log("duplicate OSC route message detected".red);
+			cb(null, null, null);
+	} else {
+		lastOscMessageSent = route;
+		emitter.emit(route, 1);
+		setTimeout( function(){ emitter.emit(route, 0) }, 25);
+		cb(route, type, name);
+	}
 }
 
 /***

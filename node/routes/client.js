@@ -73,10 +73,6 @@ var update = function(LOCATIONS, OSC){
 
         case 'page_id':
           pageId = val.toString();
-
-          // LOCATIONS.getOscRoute(val.toString(), function(route){
-          //   oscRoute = route.toString();
-          // });
           break;
 
         case 'screen_id':
@@ -86,9 +82,7 @@ var update = function(LOCATIONS, OSC){
         default:
           // console.log("unrecognized field")
           break;
-
       }
-
     });
     busboy.on('finish', function() {
       console.log('Done parsing form!'.green);
@@ -96,7 +90,10 @@ var update = function(LOCATIONS, OSC){
       processOscRoute(LOCATIONS, pageId, function(route){
         //console.log("created route: ".cyan + route);
         OSC.send(screenId, route, location, function(addr, type, name){
-          console.log(" OSC SENT ".green.inverse +" route: "+ addr);
+          if (addr != null)
+            console.log(" OSC SENT ".green.inverse +" route: "+ addr);
+          //else
+            //console.log(" OSC NOT SENT SENT ".red.inverse +" route: "+ addr);
         })
         res.status(200).send("/update OK")
       });

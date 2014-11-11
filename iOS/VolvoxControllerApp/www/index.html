@@ -16,7 +16,7 @@
             <div class="left"></div>
             <div class="right">
                 <a href="#/share">Share</a> | 
-                <a href="#/cities">About</a>
+                <a href="#/about">About</a>
             </div>
         </footer>
 
@@ -74,11 +74,7 @@
             <div class="body">
                 <div class="slick_carousel">
                     <% _.each(images, function(image) { %>
-                        <!--
-                        <div class="slick_carousel_bg" style="background: url(<%= server_address %><%= image.url %>)">
-                        </div>
-                        -->
-                        <div class="slick_carousel_bg">
+                        <div class="slick_carousel_bg" img-id="<%= image.id %>">
                             <img src="<%= server_address %><%= image.url %>">
                         </div>
                     <% }); %>
@@ -121,6 +117,18 @@
                     <input type="text" id="share_email">
                     <input type="submit" id="share_submit">
                 </div>
+            </div>
+        </script>
+
+        <script type="text/html" id="tpl-about">
+             <header>
+                <% if(back === true) { %>
+                    <span class="backBtn">Back</span>
+                <% } %>
+                <p class="header_title"><%= header_title %></p>
+            </header>
+            <div class="body">
+
             </div>
         </script>
 

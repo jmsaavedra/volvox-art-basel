@@ -347,7 +347,7 @@ app.main = (function() {
                 method: 'POST',
                 data: dataToSend,
                 success: function() {
-                    alert('Information sent. App restarted.', function() {
+                    alert('Information sent. New session initiated.', function() {
                         // clear fav
                         CLIENT.favorites = [];
                         app.main.updateLS();
@@ -356,7 +356,7 @@ app.main = (function() {
                     });
                 },
                 error: function() {
-                    alert('Information sent. App restarted.', function() {
+                    alert('Information sent. New session initiated.', function() {
                         // clear fav
                         CLIENT.favorites = [];
                         app.main.updateLS();

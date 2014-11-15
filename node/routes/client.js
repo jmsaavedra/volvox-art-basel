@@ -319,7 +319,8 @@ var favorite = function(LOCATIONS, OSC){
       if(!imgSwipe) {
         processOscRoute(LOCATIONS, pageId, function(route){
           //console.log("created route: ".cyan + route);
-          route += "/like";
+          //route += "/like";
+route = "like";
           OSC.send(screenId, route, "", function(addr, type, name){
             if (addr != null)
               console.log(" OSC SENT ".green.inverse +" route: "+ addr+"\n");

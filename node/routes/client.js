@@ -156,20 +156,16 @@ var processOscRoute = function(LOCATIONS, page, cb){
 */
 var share = function(LOCATIONS, OSC){
 
-
   // var screen = 1;     // get from busboy Field
   // var type = "share"; // share event
   // var location = 0;   // no location
-
-
   return function(req, res){
     console.log("/share POST received".cyan);
-
     var allLocs = LOCATIONS.all();
-    var formattedTime;
     var currTime = new Date();
-    formattedTime = currTime.getDate() + currTime.getMonth() + currTime.getYear() + " - "+ currTime.getHours()+":"+currTime.getMinutes();
+    var formattedTime = currTime.getDate() + currTime.getMonth() + currTime.getYear() + " - "+ currTime.getHours()+":"+currTime.getMinutes();
     var favoritedProperties = [];
+    var screenId = 1;
     var visitor = {     // placeholder visitor object
       first_name: "first",
       last_name: "last",
@@ -177,7 +173,6 @@ var share = function(LOCATIONS, OSC){
       time: currTime.toString("hh:mm tt"),
       properties: []
     }
-
 
     var busboy = new Busboy({ headers: req.headers });
 
@@ -195,6 +190,10 @@ var share = function(LOCATIONS, OSC){
 
         case 'email':
           visitor.email = val.toString();
+          break;
+
+        case 'screen_id':
+          screenId = val.toString();
           break;
 
         case 'favorites[]':
@@ -221,6 +220,13 @@ var share = function(LOCATIONS, OSC){
             if(err) console.log("error saving to visitor log: ".red + err);
             else {
               console.log(" visitor saved: ".green.inverse + JSON.stringify(visitor, null, '\t')+'\n');
+              route = "share";
+              OSC.send(screenId, route, "", function(addr, type, name){
+                if (addr != null)
+                  console.log(" OSC SENT ".green.inverse +" route: "+ addr+"\n");
+                //else
+                  //console.log(" OSC NOT SENT SENT ".red.inverse +" route: "+ addr);
+              })
               res.status(200).send("/share OK")
             }
           });
@@ -320,7 +326,7 @@ var favorite = function(LOCATIONS, OSC){
         processOscRoute(LOCATIONS, pageId, function(route){
           //console.log("created route: ".cyan + route);
           //route += "/like";
-route = "like";
+          route = "like";
           OSC.send(screenId, route, "", function(addr, type, name){
             if (addr != null)
               console.log(" OSC SENT ".green.inverse +" route: "+ addr+"\n");

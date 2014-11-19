@@ -1,0 +1,151 @@
+*, *:link {
+  -webkit-tap-highlight-color: transparent;
+  /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+  list-style: none;
+  text-decoration: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  -webkit-touch-callout: none;
+  /* prevent callout to copy image, etc when tap to hold */
+  -webkit-text-size-adjust: none;
+  /* prevent webkit from resizing text to fit */
+  -webkit-user-select: none;
+  /* prevent copy paste, to allow, change 'none' to 'text' */
+  width: 100%;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+#view {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+header {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+  background: #fafafa;
+  border-bottom: 1px #e2e2e2 solid;
+  width: 100%;
+  text-align: center;
+  padding: 0px;
+}
+header .header_title {
+  margin: 28px 0px 7px 0px;
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+footer {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 70px;
+  border-top: 1px solid #e3e3e3;
+  background: #fff;
+}
+footer .left {
+  float: left;
+  width: 50%;
+  height: 100%;
+  background: url(../img/douglas_logo.png) no-repeat;
+  -webkit-background-size: contain;
+  background-size: contain;
+  background-position: 50% 50%;
+}
+footer .right {
+  float: right;
+  width: 50%;
+  text-align: right;
+  font-size: 1.25em;
+  padding: 22px;
+}
+
+.body {
+  padding: 57px 0px;
+  height: 100%;
+  overflow-y: scroll;
+}
+.body a:nth-child(odd) .list_title {
+  background: #f2f2f2;
+}
+.body a:nth-child(even) .list_title {
+  background: #fbfbfb;
+}
+
+.list_title {
+  font-size: 1.3em;
+  margin: 0px;
+  padding: 15px 20px;
+  border-bottom: 1px solid #fafafa;
+}
+
+.flag {
+  float: right;
+  color: #d0d0d0;
+}
+
+.slick_carousel {
+  width: 100%;
+}
+.slick_carousel .slick_carousel_bg {
+  width: 100%;
+  height: 250px;
+}
+.slick_carousel .slick_carousel_bg img {
+  height: 100%;
+}
+
+.backBtn {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding: 28px 25px 10px 20px;
+  color: #1f5fc5;
+  font-size: 1.25em;
+  cursor: pointer;
+}
+
+.backBtn:active {
+  font-weight: 800;
+}
+
+.favBtn {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  color: #98a4b9;
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.faved {
+  color: #a81823 !important;
+}
+
+#share_form {
+  padding: 20px 20px;
+}
+
+.prop_info {
+  padding: 20px;
+}
+
+#fav_list {
+  padding: 15px 20px 0px 20px;
+  font-size: 1.5em;
+}
+#fav_list .fav_delete {
+  float: right;
+  font-size: 1.5em;
+}

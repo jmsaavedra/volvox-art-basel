@@ -336,6 +336,7 @@ app.main = (function() {
         // share
         $('#share_submit').off('click').on('click', function() {
             var dataToSend = {
+                screen_id: CLIENT.screen_id,
                 firstName: $('#share_first_name').val(),
                 lastName: $('#share_last_name').val(),
                 email: $('#share_email').val(),

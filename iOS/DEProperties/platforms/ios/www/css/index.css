@@ -40,7 +40,7 @@ header {
   padding: 0px;
 }
 header .header_title {
-  margin: 28px 15px 7px 15px;
+  margin: 28px 30px 7px 30px;
   font-size: 1.2em;
   font-weight: 600;
 }
@@ -76,7 +76,9 @@ footer .right {
 .body {
   padding: 57px 0px;
   height: 100%;
-  overflow-y: scroll;
+  /*overflow-y: scroll;*/
+  overflow-x:hidden;
+    overflow-y:scroll;
 }
 .body a:nth-child(odd) .list_title {
   background: #f2f2f2;
@@ -98,14 +100,18 @@ footer .right {
 }
 
 .slick_carousel {
+  float: top;
+  padding-top:100px;
   width: 100%;
+  
 }
 .slick_carousel .slick_carousel_bg {
   width: 100%;
-  height: 250px;
+  height: 200px;
 }
 .slick_carousel .slick_carousel_bg img {
-  height: 100%;
+  height: 100% ;
+  width:100%; 
 }
 
 .backBtn {

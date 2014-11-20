@@ -220,6 +220,12 @@ app.main = (function() {
                         infinite: false,
                         accessibility: true,
                         autoplay: false,
+                        // centerMode: true,
+                        // variableWidth: true,
+                        // centerMode: true,
+                        // centerPadding: '50%',
+                        // slidesToShow: 1,
+                        // touchMove: true,
                         dots: true,
                         onAfterChange: function(i, index) {
                             // console.log(i, index);

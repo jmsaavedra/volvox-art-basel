@@ -128,14 +128,15 @@ footer .right {
 
 .list_title {
 /*   border:3px dotted #000000; */
-  font-size: 1.3em;
+  font-size: 1.0em;
   margin: 0px 0px 0px 0px;
   padding: 15px 30px 15px 20px;
   border-bottom: 1px solid #fafafa;
 }
 
 .list_title:active {
-	font-weight: 600;
+	/*font-weight: 600;*/
+  color: #4aa5c2;
 }
 
 .flag {
@@ -169,14 +170,16 @@ footer .right {
   top: 0px;
   left: 0px;
   padding: 22px 70px 17px 20px;
-  color: #1f5fc5;
+  /*color: #555;*/
+  color: #4aa5c2;
   font-size: 1.25em;
   cursor: pointer;
 }
 
 .backBtn:active {
-  font-weight: 600;
-  font-size: 1.25em;
+  color: #222;
+/*  font-weight: 600;
+  font-size: 1.25em;*/
 }
 
 .favBtn {
@@ -194,7 +197,7 @@ footer .right {
 }
 
 .faved {
-  color: #a81823 !important;
+  color: #4aa5c2 !important;
 }
 
 #share_form {
@@ -203,14 +206,14 @@ footer .right {
 
 #share_form input[type=text] {
   width:95%;
-  text-align: center;
-  font-size: 1.3em;
+  text-align: left;
+  font-size: 1.0em;
 }
 
 #share_form input[type=email] {
   width:95%;
-  text-align: center;
-  font-size: 1.3em;
+  text-align: left;
+  font-size: 1.0em;
 }
 
 #share_form input[type=submit] {
@@ -260,29 +263,33 @@ footer .right {
   float: right;
   font-size: 2.5em;
   font-weight: 600;
-  color:#a81823;
+  color:#4aa5c2;
 }
 
 .fav_delete:active {
-	color: #000000;
+	color: #222;
 }
 
 .shareBtn {
 	padding: 15px 0px 20px 10px;
+  color: #222 !important;
 /* 	  border:2px dotted #000000; */
 }
 
 .aboutBtn {
 	padding: 15px 10px 20px 0px;
 	margin: 0px -15px 0px 0px;
+  color: #222 !important;
 /* 	  border:2px dotted #000000; */
 }
 .shareBtn:active {
-	font-weight: 600;
+	/*font-weight: 600;*/
+  color: #4aa5c2 !important;
 }
 
 .aboutBtn:active {
-	font-weight: 600;
+	/*font-weight: 600;*/
+  color: #4aa5c2 !important;
 }
 
 .about_body p{

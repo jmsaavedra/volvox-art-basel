@@ -44,7 +44,12 @@
                 <p class="header_title"><%= header_title %></p>
             </header>
             <div class="body">
-                <% _.each(list_properties, function(item) { %>
+                <% _.each(list_properties, function(item) { 
+                    var reg = new RegExp('   ', 'g');
+                    // var displayName = item.name.replace(reg, '&nbsp;&nbsp;&nbsp;');
+                    var displayName = item.name.replace(reg, '<br>');
+                    %>
+
                     <a href="<%= current_hash %>/<%= item.name %>">
                     <li class="list_title">
                         
@@ -53,7 +58,7 @@
                         <% } else { %>
                             <span class="flag list">&#9873;</span>
                         <% } %>
-                        <span><%= item.name %></span>
+                        <span><%= displayName %></span>
                     </li>
                     </a>
                 <% }); %>
@@ -62,6 +67,11 @@
 
         <script type="text/html" id="tpl-prop-detail">
             <header>
+                <% var reg = new RegExp('&nbsp;&nbsp;&nbsp;', 'g');
+                // var displayName = item.name.replace(reg, '&nbsp;&nbsp;&nbsp;');
+                var _displayName = header_title.replace(reg, '<br>');
+                console.log("DISPLAY PROP NAME: "+_displayName);
+                %>
                 <% if(back === true) { %>
                     <span class="backBtn">Back</span>
                 <% } %>
@@ -70,7 +80,7 @@
                 <% } else { %>
                     <span class="favBtn">&#9873;</span>
                 <% } %>
-                    <p class="header_prop_title"><%= header_title %></p>
+                    <p class="header_prop_title"><%= _displayName %></p>
             </header>
             <div class="body prop">
                 <div class="slick_carousel">
@@ -99,13 +109,17 @@
                 <div id="fav_list">
                     <label>Liked Properties:</label>
                     <% if(fav_list.length > 0) { %>
-                        <% _.each(fav_list, function(p_item) { %>
+                        <% _.each(fav_list, function(p_item) { 
+                            var reg = new RegExp('   ', 'g');
+                            var displayName = p_item.name.replace(reg, '<br>'); %>
+            
                             <li class="fav_item" data-id="<%= p_item.id %>">
                                 <span class="fav_delete">
                                     &times;
                                 </span>
                                 <span class="fav_title">
-                                    <%= p_item.name %>
+                                    <!-- p_item.name -->
+                                    <%= displayName %>
                                 </span>
 
                             </li>

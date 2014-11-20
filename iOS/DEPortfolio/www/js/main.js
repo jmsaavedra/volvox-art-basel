@@ -178,6 +178,15 @@ app.main = (function() {
                 console.log('Page: ' + city);
                 app.main.updateLS();
                 CLIENT.page_id = app.main.dataFromServer[getIndexByName(city)].id;
+                // var rawPropNames = app.main.dataFromServer[getIndexByName(city)].properties;
+                // console.log("rawPropNames: "+rawPropNames);
+                var propertiesFormatted = [];
+                // var reg = new RegExp('   ', 'g');
+                //  for( var i=0; i<rawPropNames.length; i++){
+                //     var thisPropFormttd = rawPropNames[i].replace(reg, '&nbsp;&nbsp;&nbsp;');
+                //     propertiesFormatted.push(thisPropFormttd);
+                //  }
+
                 render({
                     tpl: 'tpl-list-props',
                     header: city,
@@ -188,6 +197,7 @@ app.main = (function() {
                         back: true,
                         current_hash: window.location.hash,
                         header_title: app.main._objData.header,
+                        //list_properties: propertiesFormatted;
                         list_properties: app.main.dataFromServer[getIndexByName(city)].properties
                     });
                     $('#view').html(app.main._compiled);
@@ -200,9 +210,12 @@ app.main = (function() {
                 var cityIndex = getIndexByName(city);
                 var propertyIndex = getIndexByNameProp(cityIndex, property);
                 CLIENT.page_id = app.main.dataFromServer[cityIndex].properties[propertyIndex].id;
+                var propTitle;
+                reg = new RegExp('   ', 'g');
+                propTitle = property.replace(reg, '&nbsp;&nbsp;&nbsp;');
                 render({
                     tpl: 'tpl-prop-detail',
-                    header: property,
+                    header: propTitle,
                     page: property // ex: Park Grove
                 }, function() {
                     app.main._compiled = _.template(app.main._template, {

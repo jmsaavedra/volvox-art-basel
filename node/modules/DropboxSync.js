@@ -53,7 +53,14 @@ var setup = function(dropboxDirectory, cb){
 		async.eachSeries(locs, function(loc, callback){
 			var thisLoc = {};
 			var thisLocProps = []
-			thisLoc.name = loc.toLowerCase().capitalize();
+			var splitLoc = loc.split(" ");
+			var finalLocName = "";
+			for(var i=2; i<splitLoc.length; i++){
+				finalLocName += splitLoc[i];
+				if(i<splitLoc.length-1)finalLocName+=" ";
+			}
+			//thisLoc.name = loc.toLowerCase().capitalize();
+			thisLoc.name = finalLocName;
 			thisLoc.folder = loc;
 			// thisLoc.slug = slug(thisLoc.name.toLowerCase());
 			thisLoc.id = "loc"+locId.toString();
@@ -66,11 +73,21 @@ var setup = function(dropboxDirectory, cb){
 			async.eachSeries(theseProps, function(prop, _callback){
 				var thisProp = {};
 				thisProp.dir = dropboxDirectory+"/"+loc+"/"+prop;
-				thisProp.name = prop.toLowerCase().capitalize();
+
+				var splitProp = prop.split(" ");
+				var finalPropName = "";
+				for(var i=2; i<splitProp.length; i++){
+					finalPropName += splitProp[i];
+					if(i<splitProp.length-1)finalPropName+=" ";
+				}
+				// console.log("finalPropName: "+finalPropName);
+				// reg = new RegExp('   ', 'g');
+				// finalPropName = finalPropName.replace(reg, '&nbsp;&nbsp;&nbsp;');
+				thisProp.name = finalPropName;
 				thisProp.folder = prop;
 				// thisProp.slug = slug(thisProp.name.toLowerCase());
 				thisProp.parent_id = "loc"+(locId-1);
-				thisProp.parent_name = loc;
+				thisProp.parent_name = thisLoc.name;
 				thisProp.id = "property_"+propId.toString();
 				thisProp.count = "prop"+propCount.toString();
 				var imgs = _.without(fs.readdirSync(thisProp.dir), 'info.txt', '.DS_Store');
@@ -80,17 +97,22 @@ var setup = function(dropboxDirectory, cb){
 				})
 				thisProp.img = imgs;
 				var thisInfoDir = thisProp.dir+"/info.txt";
-				fs.existsSync(thisProp.dir+"/info.txt", function(exists){
-					if (exists){
-						//thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
-					} else {
-						console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
-					}
-				});
+				// fs.existsSync(thisProp.dir+"/info.txt", function(exists){
+				// 	if (exists){
+				// 		//thisProp.info = fs.readFileSync(thisProp.dir+"/info.txt").toString();
+				// 	} else {
+				// 		console.log("ERROR:".red.inverse + " property: "+thisProp.name + " MISSING info.txt file");
+				// 	}
+				// });
 				var rawInfo = fs.readFileSync(thisProp.dir+"/info.txt").toString();
 				var find = '\n' // find this line break in info file
 				var reg = new RegExp(find, 'g');
 				thisProp.info = rawInfo.replace(reg, '<br>'); //replace with <br> to add visual breaks
+				find = '\r';
+				reg= new RegExp(find, 'g');
+				thisProp.info = thisProp.info.replace(reg, '');
+				// reg = new RegExp(' ', 'g');
+				// thisProp.info = thisProp.info.replace(reg, '&nbsp;');
 				propId ++; //global property id
 				propCount++; //this location property id
 				thisLocProps.push(thisProp);

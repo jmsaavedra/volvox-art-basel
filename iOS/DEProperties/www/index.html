@@ -15,8 +15,8 @@
         <footer>
             <div class="left"></div>
             <div class="right">
-                <a href="#/share">Share</a> | 
-                <a href="#/about">About</a>
+                <a href="#/share" class="shareBtn">Share</a> | 
+                <a href="#/about" class="aboutBtn">About</a>
             </div>
         </footer>
 
@@ -47,12 +47,13 @@
                 <% _.each(list_properties, function(item) { %>
                     <a href="<%= current_hash %>/<%= item.name %>">
                     <li class="list_title">
-                        <span><%= item.name %></span>
+                        
                         <% if(_.contains(fav, item.id)) { %>
-                            <span class="flag faved">&#9873;</span>
+                            <span class="flag faved list">&#9873;</span>
                         <% } else { %>
-                            <span class="flag">&#9873;</span>
+                            <span class="flag list">&#9873;</span>
                         <% } %>
+                        <span><%= item.name %></span>
                     </li>
                     </a>
                 <% }); %>
@@ -69,13 +70,9 @@
                 <% } else { %>
                     <span class="favBtn">&#9873;</span>
                 <% } %>
-                <% if(header_title.length<=20) { console.log("REGULAR TITLE>>>")%>
-                    <p class="header_title"><%= header_title %></p>
-                <% } else { console.log("REGULAR TITLE>>>") %>
-                    <p class="header_title_long"><%= header_title %></p>
-                <% } %>
+                    <p class="header_prop_title"><%= header_title %></p>
             </header>
-            <div class="body">
+            <div class="body prop">
                 <div class="slick_carousel">
                     <% _.each(images, function(image) { %>
                         <div class="slick_carousel_bg" img-id="<%= image.id %>">
@@ -98,27 +95,30 @@
             </header>
             <div class="body">
                 <!-- list of favs -->
+
                 <div id="fav_list">
+                    <label>Liked Properties:</label>
                     <% if(fav_list.length > 0) { %>
                         <% _.each(fav_list, function(p_item) { %>
                             <li class="fav_item" data-id="<%= p_item.id %>">
-                                <span class="fav_title">
-                                    <%= p_item.name %>
-                                </span>
                                 <span class="fav_delete">
                                     &times;
                                 </span>
+                                <span class="fav_title">
+                                    <%= p_item.name %>
+                                </span>
+
                             </li>
                         <% }); %>
                     <% } %>
                 </div>
                 <div id="share_form">
                     <label>First name:</label>
-                    <input type="text" id="share_first_name">
+                    <input type="text" style="text-transform:capitalize" id="share_first_name">
                     <label>Last name:</label>
-                    <input type="text" id="share_last_name">
+                    <input type="text" style="text-transform:capitalize" id="share_last_name">
                     <label>Email address:</label>
-                    <input type="text" id="share_email">
+                    <input type="email" id="share_email">
                     <input type="submit" id="share_submit">
                 </div>
             </div>
@@ -132,7 +132,17 @@
                 <p class="header_title"><%= header_title %></p>
             </header>
             <div class="body">
+                <div class="about_body">
+                <p> &emsp;&emsp;Douglas Elliman Real Estate and Knight Frank Residential, two of the biggest names in residential real estate, announce the launch of a new global brand alliance, resulting in the largest interactive and connected network for prime and super prime residential properties in the world. With more than 200 years of collective real estate industry experience, Douglas Elliman and Knight Frank Residential are the fourth largest residential brokerage in the United States and the largest independent residential brokerage in the United Kingdom, respectively.
+                </p>
+                <p> &emsp;&emsp;Under the new Douglas Elliman Knight Frank Residential alliance, the two firms share marketing resources for domestic and international properties in the top 10% of each market they service through co-branding across New York City, the Hamptons, Long Island, Westchester, South Florida and Los Angeles. Together, the firms can leverage their reach through a network of over 400 offices across 52 countries, and nearly 20,000 agents. Douglas Elliman and Knight Frank Residential will jointly market more than $38 billion worth of prime and super-prime properties.
+                </p>
+                <p> &emsp;&emsp;Additionally, Douglas Elliman and Knight Frank Residential have released a first-ever joint Wealth Report supplement, which outlines the increasingly close economic ties between the world’s leading cities. The new research found that London and New York are set to lead the prime markets relating to global wealth and property investment, while Los Angeles, Miami, Paris, and Dubai are following closely behind. Douglas Elliman and Knight Frank Residential executives point to this extensive global research as a catalyst for creating a new brand alliance that caters to clients with similar investment strategies in prime international markets. 
+                </p>
+                <p>&emsp;&emsp;"This new global alliance formed by Douglas Elliman and Knight Frank Residential is a testament to our shared history, vision, and commitment to our clientele. With our best agents, the finest international properties, and in-depth global market analysis, we are offering our customers a truly seamless experience whether they’re in Malibu, Manhattan, or Moscow," said Howard M. Lorber, Chairman, Douglas Elliman. 
+                </p>
 
+                </div>
             </div>
         </script>
 

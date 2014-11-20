@@ -69,7 +69,11 @@
                 <% } else { %>
                     <span class="favBtn">&#9873;</span>
                 <% } %>
-                <p class="header_title"><%= header_title %></p>
+                <% if(header_title.length<=20) { console.log("REGULAR TITLE>>>")%>
+                    <p class="header_title"><%= header_title %></p>
+                <% } else { console.log("REGULAR TITLE>>>") %>
+                    <p class="header_title_long"><%= header_title %></p>
+                <% } %>
             </header>
             <div class="body">
                 <div class="slick_carousel">

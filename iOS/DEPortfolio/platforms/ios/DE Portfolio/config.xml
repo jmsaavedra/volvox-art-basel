@@ -31,12 +31,12 @@
     <feature name="Notification">
         <param name="ios-package" value="CDVNotification" />
     </feature>
-    <name>DE Properties</name>
+    <name>DE Portfolio</name>
     <description>
-        Hello World sample application that responds to the deviceready event.
+        Douglas Elliman Real Estate App
     </description>
-    <author email="support@phonegap.com" href="http://phonegap.com">
-        PhoneGap Team
+    <author email="kamil@volvoxlabs.com" href="http://volvoxlabs.com">
+        Joe Saavedra for Volvox Labs
     </author>
     <preference name="permissions" value="none" />
     <preference name="phonegap-version" value="3.5.0" />

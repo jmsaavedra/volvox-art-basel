@@ -17,7 +17,7 @@
  under the License.
  */
 //
-// Prefix header for all source files of the 'DE Properties' target in the 'DE Properties' project
+// Prefix header for all source files of the 'DE Portfolio' target in the 'DE Portfolio' project
 //
 
 #ifdef __OBJC__

@@ -21,6 +21,7 @@
         </footer>
 
         <!-- Templates -->
+        <!-- LIST ALL LOCATIONS -->
         <script type="text/html" id="tpl-list-locations">
             <header>
                 <p class="header_title"><%= header_title %></p>
@@ -28,7 +29,7 @@
             <div class="body">
                 <% _.each(list_locations, function(item) { %>
                     <a href="#/cities/<%= item.name %>">
-                    <li class="list_title">
+                    <li class="list_title loc">
                         <%= item.name %>
                     </li>
                     </a>
@@ -36,6 +37,7 @@
             </div>
         </script>
 
+        <!-- LIST PROPERTIES OF A LOCATION -->
         <script type="text/html" id="tpl-list-props">
             <header>
                 <% if(back === true) { %>
@@ -45,9 +47,12 @@
             </header>
             <div class="body">
                 <% _.each(list_properties, function(item) { 
-                    var reg = new RegExp('   ', 'g');
-                    // var displayName = item.name.replace(reg, '&nbsp;&nbsp;&nbsp;');
-                    var displayName = item.name.replace(reg, '<br>');
+
+                    var splitStr = item.name.split('   ');
+                    var displayLoc = splitStr[1];//"<span class='loc_list_sub'>"+splitStr[1]+"</span>";
+                    var displayName = splitStr[0];
+                    //var reg = new RegExp('   ', 'g');
+                    //var displayName = item.name.replace(reg, '<br>');
                     %>
 
                     <a href="<%= current_hash %>/<%= item.name %>">
@@ -59,27 +64,34 @@
                             <span class="flag list">&#9873;</span>
                         <% } %>
                         <span><%= displayName %></span>
+                        <span class='loc_list_sub'><br><%= displayLoc %></span>
                     </li>
                     </a>
                 <% }); %>
             </div>
         </script>
 
+        <!-- SINGLE PROPERTY DETAIL -->
         <script type="text/html" id="tpl-prop-detail">
             <header>
                 <% var reg = new RegExp('&nbsp;&nbsp;&nbsp;', 'g');
-                // var displayName = item.name.replace(reg, '&nbsp;&nbsp;&nbsp;');
-                var _displayName = header_title.replace(reg, '<br>');
-                console.log("DISPLAY PROP NAME: "+_displayName);
+                var splitStr = header_title.split('&nbsp;&nbsp;&nbsp;');
+                var propLocHeader = splitStr[1];
+                var _displayName = splitStr[0];
+                // var _displayName = header_title.replace(reg, '<br><span class="prop_loc_header">');
+                // _displayName = _displayName.concat('</span>')
+                // console.log("DISPLAY PROP NAME: "+_displayName);
                 %>
                 <% if(back === true) { %>
                     <span class="backBtn">Back</span>
                 <% } %>
+
                 <% if(fav === true) { %>
                     <span class="favBtn faved">&#9873;</span>
                 <% } else { %>
                     <span class="favBtn">&#9873;</span>
                 <% } %>
+                    <p class="header_title in_prop"><%= propLocHeader %></p>
                     <p class="header_prop_title"><%= _displayName %></p>
             </header>
             <div class="body prop">
@@ -96,6 +108,7 @@
             </div>
         </script>
 
+        <!-- SHARE PAGE -->
         <script type="text/html" id="tpl-share">
             <header>
                 <% if(back === true) { %>
@@ -110,8 +123,12 @@
                     <label>Liked Properties:</label>
                     <% if(fav_list.length > 0) { %>
                         <% _.each(fav_list, function(p_item) { 
-                            var reg = new RegExp('   ', 'g');
-                            var displayName = p_item.name.replace(reg, '<br>'); %>
+                            // var reg = new RegExp('   ', 'g');
+                            // var displayName = p_item.name.replace(reg, '<br>'); 
+                            var splitStr = p_item.name.split('   ');
+                            var displayLoc = splitStr[1];
+                            var displayName = splitStr[0];
+                        %>
             
                             <li class="fav_item" data-id="<%= p_item.id %>">
                                 <span class="fav_delete">
@@ -120,6 +137,7 @@
                                 <span class="fav_title">
                                     <!-- p_item.name -->
                                     <%= displayName %>
+                                    <span class='loc_list_sub'><br><%= displayLoc %></span>
                                 </span>
 
                             </li>
@@ -138,6 +156,7 @@
             </div>
         </script>
 
+        <!-- ABOUT PAGE -->
         <script type="text/html" id="tpl-about">
              <header>
                 <% if(back === true) { %>

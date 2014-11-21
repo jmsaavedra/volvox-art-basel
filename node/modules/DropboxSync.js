@@ -105,12 +105,13 @@ var setup = function(dropboxDirectory, cb){
 				// 	}
 				// });
 				var rawInfo = fs.readFileSync(thisProp.dir+"/info.txt").toString();
-				var find = '\n' // find this line break in info file
-				var reg = new RegExp(find, 'g');
-				thisProp.info = rawInfo.replace(reg, '<br>'); //replace with <br> to add visual breaks
-				find = '\r';
-				reg= new RegExp(find, 'g');
-				thisProp.info = thisProp.info.replace(reg, '');
+				var reg1 = new RegExp('- ', 'g');
+				var reg2 = new RegExp('• ', 'g');
+				thisProp.info = rawInfo.replace(reg1, '<span class="space">- '); //replace with <br> to add visual breaks
+				thisProp.info = thisProp.info.replace(reg2, '&emsp;&emsp;• '); //replace with <br> to add visual breaks
+				reg= new RegExp('\r', 'g');
+				thisProp.info = thisProp.info.replace(reg, '<br>');
+				// thisProp.info = thisProp.info.concat("</span>");
 				// reg = new RegExp(' ', 'g');
 				// thisProp.info = thisProp.info.replace(reg, '&nbsp;');
 				propId ++; //global property id

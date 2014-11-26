@@ -245,11 +245,13 @@ app.main = (function() {
                             if (index > img_init_index) {
                                 CLIENT.img_direction = 'right';
                                 console.log('right');
+                                $.post(CLIENT.server_address + '/update', CLIENT, function(e) {});
                             } else if (index < img_init_index) {
                                 CLIENT.img_direction = 'left';
                                 console.log('left');
+                                $.post(CLIENT.server_address + '/update', CLIENT, function(e) {});
                             }
-                            $.post(CLIENT.server_address + '/update', CLIENT, function(e) {});
+
                             img_init_index = index;
                         }
                     });

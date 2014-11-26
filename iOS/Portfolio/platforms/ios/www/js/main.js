@@ -70,6 +70,7 @@ app.phonegap = (function() {
                     prompt('Input new server address below.', function(results) {
                         CLIENT.server_address = results.input1;
                         app.main.updateLS();
+                        window.location.reload();
                         // save to localstorage
                     }, CLIENT.server_address);
                 } else if (buttonIndex === 5) {
@@ -213,11 +214,17 @@ app.main = (function() {
                 var propTitle;
                 reg = new RegExp('   ', 'g');
                 propTitle = property.replace(reg, '&nbsp;&nbsp;&nbsp;');
+
+                //*******
+                // window.plugins.spinnerDialog.show(null, "Loading Property");
+
                 render({
                     tpl: 'tpl-prop-detail',
                     header: propTitle,
                     page: property // ex: Park Grove
                 }, function() {
+                  // $( document ).ready(window.plugins.spinnerDialog.hide() );
+                  window.plugins.spinnerDialog.show(null, "Loading Property");
                     app.main._compiled = _.template(app.main._template, {
                         back: true,
                         fav: getFav(CLIENT.page_id),
@@ -226,20 +233,36 @@ app.main = (function() {
                         images: app.main.dataFromServer[cityIndex].properties[propertyIndex].img,
                         info: app.main.dataFromServer[cityIndex].properties[propertyIndex].info
                     });
+                    // window.load(window.plugins.spinnerDialog.hide() ); // window.plugins.spinnerDialog.hide() ;
                     $('#view').html(app.main._compiled);
-                    // start slick
+
+                    setTimeout( function(){
+                      $("img").one("load", function() {
+                      // do stuff
+                      // alert("loaded", function(){});
+                      window.plugins.spinnerDialog.hide()
+                      }).each(function() {
+                        if(this.complete) $(this).load();
+                      });
+                    },1000);
+
                     var img_init_index = 0;
                     $('.slick_carousel').slick({
                         infinite: false,
                         accessibility: true,
                         autoplay: false,
+                        dotsClass: 'slick-dots',
+                        // lazyLoad: 'progressive',
+
                         // centerMode: true,
-                        // variableWidth: true,
+                        //variableWidth: true,
                         // centerMode: true,
                         // centerPadding: '50%',
                         // slidesToShow: 1,
                         // touchMove: true,
                         dots: true,
+                        //onInit: function(){ setTimeout(window.plugins.spinnerDialog.hide(),10000) },
+                        //onReInit: function(){ setTimeout(window.plugins.spinnerDialog.hide(),10000 )},
                         onAfterChange: function(i, index) {
                             // console.log(i, index);
                             if (index > img_init_index) {
@@ -296,15 +319,19 @@ app.main = (function() {
     };
 
     var render = function(obj, callback) {
+
         // send information to server
         $.post(CLIENT.server_address + '/update', CLIENT, function(e) {
             // console.log(e);
+
             $(window).on('ajaxSuccess', function() {
+              // $(window).plugins.spinnerDialog.show(null, "Loading...");
                 console.log('-----Update to server Success');
                 $(this).off('ajaxSuccess');
                 app.main._objData = obj;
                 app.main._template = $('#' + obj.tpl).html();
                 if (callback !== undefined) {
+                  // $('.slick_carousel').load(window.plugins.spinnerDialog.hide());
                     callback();
                     attachEvents();
                 }
@@ -314,6 +341,7 @@ app.main = (function() {
 
     var attachEvents = function() {
         console.log('attaching events');
+
         $(window).off('getDataSuccess').on('getDataSuccess', function() {
             console.log('Page: cities');
             CLIENT.page_id = 'allLocation';

@@ -23,6 +23,10 @@
                         {
                             "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"SpinnerDialog\"><param name=\"ios-package\" value=\"CDVSpinnerDialog\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -50,6 +54,9 @@
             "PACKAGE_NAME": "com.volvox.artbasel"
         },
         "org.apache.cordova.dialogs": {
+            "PACKAGE_NAME": "com.volvox.artbasel"
+        },
+        "hu.dpal.phonegap.plugins.SpinnerDialog": {
             "PACKAGE_NAME": "com.volvox.artbasel"
         }
     },

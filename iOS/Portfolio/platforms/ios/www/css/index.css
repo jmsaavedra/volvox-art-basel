@@ -169,7 +169,7 @@ footer .right {
   position:relative;
   margin-top:42px;
   width: 100%;
-  
+
 }
 .slick_carousel .slick_carousel_bg {
   width: 100%;
@@ -178,8 +178,18 @@ footer .right {
 .slick_carousel .slick_carousel_bg img {
   position:relative;
   height: 100% ;
-  width:100%; 
+  width:100%;
 }
+
+.slick-dots {
+  font-size: 5px;
+}
+
+.slick-dots li {
+  width: 12px !important;
+}
+
+
 
 .backBtn {
 /*   border:1px dotted #000000; */
@@ -241,14 +251,14 @@ footer .right {
 	width: 210px;
 	height:50px;
 	font-size: 1.0em;
-	background:#ccc; 
+	background:#ccc;
 	border:0 none;
 }
 .prop_info {
   padding: 5px 20px 15px 20px;
 }
 
-.space { 
+.space {
   margin-bottom: 30px;
 /*line-height: 3.0em; */
 }

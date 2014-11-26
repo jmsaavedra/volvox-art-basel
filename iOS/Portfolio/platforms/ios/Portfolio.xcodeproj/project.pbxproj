@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		160CC9E86DFC496085911BEE /* CDVNotification.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 125146FCA68B4C7D95FA4BEB /* CDVNotification.bundle */; };
 		1D3623260D0F684500981E51 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
@@ -44,6 +43,7 @@
 		E29B82BC1A22AC1F00A5CBCF /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = E29B82BB1A22AC1F00A5CBCF /* Default-568h@2x~iphone.png */; };
 		E29B82BE1A22AC5A00A5CBCF /* Default@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = E29B82BD1A22AC5A00A5CBCF /* Default@2x~iphone.png */; };
 		E29B82C01A22AF1600A5CBCF /* screen-iphone-portrait-568h-2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E29B82BF1A22AF1600A5CBCF /* screen-iphone-portrait-568h-2x.png */; };
+		9448F85630AE4EF3A4F706D6 /* CDVSpinnerDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = E225ED7CFC3C4EF383B7A471 /* CDVSpinnerDialog.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +117,8 @@
 		EB87FDF41871DAF40020F90C /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = ../../config.xml; sourceTree = "<group>"; };
 		F521669A0385460493CFCC57 /* CDVDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVDevice.h; path = org.apache.cordova.device/CDVDevice.h; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = Portfolio/config.xml; sourceTree = "<group>"; };
+		E225ED7CFC3C4EF383B7A471 /* CDVSpinnerDialog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVSpinnerDialog.m"; path = "hu.dpal.phonegap.plugins.SpinnerDialog/CDVSpinnerDialog.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		3F2F695525B442ECB3F5AC01 /* CDVSpinnerDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVSpinnerDialog.h"; path = "hu.dpal.phonegap.plugins.SpinnerDialog/CDVSpinnerDialog.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,6 +248,8 @@
 				F521669A0385460493CFCC57 /* CDVDevice.h */,
 				C7F33C4AB48D491F8F53AB32 /* CDVNotification.m */,
 				79CAE14DF1184771AF98ABAD /* CDVNotification.h */,
+				E225ED7CFC3C4EF383B7A471 /* CDVSpinnerDialog.m */,
+				3F2F695525B442ECB3F5AC01 /* CDVSpinnerDialog.h */,
 			);
 			name = Plugins;
 			path = Portfolio/Plugins;
@@ -450,6 +454,7 @@
 				73D1E5225A5342339F83747A /* CDVLogger.m in Sources */,
 				4A25407733964CB6BF79F76E /* CDVDevice.m in Sources */,
 				9500A4F12BFE48F1B1919C52 /* CDVNotification.m in Sources */,
+				9448F85630AE4EF3A4F706D6 /* CDVSpinnerDialog.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

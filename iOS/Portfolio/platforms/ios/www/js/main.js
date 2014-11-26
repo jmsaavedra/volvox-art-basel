@@ -223,8 +223,9 @@ app.main = (function() {
                     header: propTitle,
                     page: property // ex: Park Grove
                 }, function() {
-                  // $( document ).ready(window.plugins.spinnerDialog.hide() );
-                  window.plugins.spinnerDialog.show(null, "Loading Property");
+                  // $( document ).ready(window.plugins.spinnerDialog.hide() )
+                  //*******;
+                    window.plugins.spinnerDialog.show(null, "Loading Property");
                     app.main._compiled = _.template(app.main._template, {
                         back: true,
                         fav: getFav(CLIENT.page_id),
@@ -236,13 +237,26 @@ app.main = (function() {
                     // window.load(window.plugins.spinnerDialog.hide() ); // window.plugins.spinnerDialog.hide() ;
                     $('#view').html(app.main._compiled);
 
+                    // $(window).load(function(){
+                    //   window.plugins.spinnerDialog.hide()
+                    // });
+                    var imgCt = 0;
+                    var totalImgs = $("img").length;
+                    console.log("totalImgs: "+totalImgs);
+
                     setTimeout( function(){
                       $("img").one("load", function() {
                       // do stuff
                       // alert("loaded", function(){});
                       window.plugins.spinnerDialog.hide()
                       }).each(function() {
-                        if(this.complete) $(this).load();
+                        if(this.complete){
+                          imgCt++;
+                          $(this).load();
+                          if(imgCt == totalImgs){
+                            console.log("FINISHED IMG LOADING");
+                          }
+                        }
                       });
                     },1000);
 
@@ -301,18 +315,21 @@ app.main = (function() {
             '/about': function() {
                 console.log('Page: /about');
                 app.main.updateLS();
+                window.plugins.spinnerDialog.show(null, "Loading About...");
                 render({
                     tpl: 'tpl-about',
                     header: 'About',
                     page: 'about',
                     back: true
                 }, function() {
+
                     app.main._compiled = _.template(app.main._template, {
                         back: true,
                         header_title: app.main._objData.header
                     });
                     $.post(CLIENT.server_address + '/about', CLIENT, function(e) {});
-                    $('#view').html(app.main._compiled);
+                    $('#view').html(app.main._compiled)
+                    $('.about_body').load(window.plugins.spinnerDialog.hide());
                 });
             }
         });
@@ -342,6 +359,7 @@ app.main = (function() {
     var attachEvents = function() {
         console.log('attaching events');
 
+
         $(window).off('getDataSuccess').on('getDataSuccess', function() {
             console.log('Page: cities');
             CLIENT.page_id = 'allLocation';
@@ -356,6 +374,7 @@ app.main = (function() {
                     list_locations: app.main.dataFromServer
                 });
                 $('#view').html(app.main._compiled);
+
             });
         });
         // back

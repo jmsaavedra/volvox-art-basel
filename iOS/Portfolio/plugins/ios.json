@@ -9,6 +9,10 @@
                 "parents": {
                     "/*": [
                         {
+                            "xml": "<feature name=\"SpinnerDialog\"><param name=\"ios-package\" value=\"CDVSpinnerDialog\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"ActionSheet\"><param name=\"ios-package\" value=\"ActionSheet\" /></feature>",
                             "count": 1
                         },
@@ -23,10 +27,6 @@
                         {
                             "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
                             "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"SpinnerDialog\"><param name=\"ios-package\" value=\"CDVSpinnerDialog\" /></feature>",
-                            "count": 1
                         }
                     ]
                 }
@@ -35,7 +35,7 @@
                 "parents": {
                     "AudioToolbox.framework": [
                         {
-                            "xml": "true",
+                            "xml": true,
                             "count": 1
                         }
                     ]
@@ -44,6 +44,9 @@
         }
     },
     "installed_plugins": {
+        "hu.dpal.phonegap.plugins.SpinnerDialog": {
+            "PACKAGE_NAME": "com.volvox.artbasel"
+        },
         "nl.x-services.plugins.actionsheet": {
             "PACKAGE_NAME": "com.volvox.artbasel"
         },
@@ -54,9 +57,6 @@
             "PACKAGE_NAME": "com.volvox.artbasel"
         },
         "org.apache.cordova.dialogs": {
-            "PACKAGE_NAME": "com.volvox.artbasel"
-        },
-        "hu.dpal.phonegap.plugins.SpinnerDialog": {
             "PACKAGE_NAME": "com.volvox.artbasel"
         }
     },

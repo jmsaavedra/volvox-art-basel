@@ -19,7 +19,7 @@ console.log("\n******  INIT VOLVOX SERVER  *****".zebra);
 //
 */
 // var DropBoxDirectory = "C:/Users/WS_5/Dropbox/STRUCTURE/LOCATIONS"; //VOLVOX!!
-var DropBoxDirectory = "/Users/jmsaavedra/Dropbox\ (Personal)/STRUCTURE/LOCATIONS"; //JOE!!
+var DropBoxDirectory = "/Users/jmsaavedra/Dropbox/STRUCTURE/LOCATIONS"; //JOE!!
 //var DropBoxDirectory = "/Volumes/Dropbox/Dropbox/STRUCTURE/LOCATIONS"; // APON !!
 
 

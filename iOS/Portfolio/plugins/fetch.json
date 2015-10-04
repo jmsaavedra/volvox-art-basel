@@ -1,0 +1,34 @@
+{
+    "hu.dpal.phonegap.plugins.SpinnerDialog": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Paldom/SpinnerDialog.git",
+            "subdir": "."
+        }
+    },
+    "nl.x-services.plugins.actionsheet": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/EddyVerbruggen/cordova-plugin-actionsheet",
+            "subdir": "."
+        }
+    },
+    "org.apache.cordova.console": {
+        "source": {
+            "type": "local",
+            "path": "/Users/aponpalanuwech/.plugman/cache/org.apache.cordova.console/0.2.11/package"
+        }
+    },
+    "org.apache.cordova.device": {
+        "source": {
+            "type": "local",
+            "path": "/Users/aponpalanuwech/.plugman/cache/org.apache.cordova.device/0.2.12/package"
+        }
+    },
+    "org.apache.cordova.dialogs": {
+        "source": {
+            "type": "local",
+            "path": "/Users/aponpalanuwech/.plugman/cache/org.apache.cordova.dialogs/0.2.10/package"
+        }
+    }
+}

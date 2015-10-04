@@ -3,7 +3,7 @@
 // GLOBAL FOR CLIENT =================================//
 var CLIENT = {
     session_id: '',
-    server_address: 'http://192.168.2.243:8080',
+    server_address: 'http://192.168.1.5:8080',
     page_id: '',
     img_id: '',
     img_direction: null,
@@ -35,6 +35,39 @@ app.phonegap = (function() {
             }
         };
     };
+
+    var passwordGate = function() {
+        var _this = this;
+        
+        console.log('Hit passwordGate');
+        prompt(
+            'Please enter the password',  function(results){
+                setTimeout(function(){
+                    console.log('hit password callback');
+                    console.log("You selected button number " + results.buttonIndex + " and entered " + results.input1);
+                    if(results.input1 === 'elliman123'){ // 'elliman123'
+                        _this.actionSheet();
+                    } 
+                    else {
+                        // console.log('vibrating');
+                        // navigator.notification.vibrate();
+                    }
+                });
+            }
+        );
+    };
+
+    var sorryWrongPw = function(){
+        alert('Sorry, wrong password.', function(){
+            console.log('wrong pass');
+        });
+        // navigator.notification.alert('Sorry, wrong password.', function(){
+        //     setTimeout(function(){
+        //         // window.location.reload();
+        //     });
+        // }, 'Sorry', 'OK');
+    };
+
     var actionSheet = function() {
         //
         function screenCheck(n) {
@@ -85,7 +118,8 @@ app.phonegap = (function() {
     };
     return {
         init: init,
-        actionSheet: actionSheet
+        actionSheet: actionSheet,
+        passwordGate: passwordGate
     };
 })();
 
@@ -447,9 +481,12 @@ app.main = (function() {
             });
         });
 
-        // action sheet
+        // action sheet !!! *******
         $('footer .left').off('click').on('click', function() {
-            app.phonegap.actionSheet();
+            console.log('HIT FOOTER :::');
+            // app.phonegap.actionSheet();
+            
+            app.phonegap.passwordGate();
         });
     };
 

@@ -29,6 +29,9 @@
     <feature name="Notification">
         <param name="ios-package" value="CDVNotification" />
     </feature>
+    <feature name="Vibration">
+        <param name="ios-package" value="CDVVibration" />
+    </feature>
     <name>Portfolio</name>
     <description>
         Douglas Elliman Real Estate App

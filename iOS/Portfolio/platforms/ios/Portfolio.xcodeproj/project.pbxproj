@@ -46,6 +46,7 @@
 		D6EB4A2927D34954AE1137F3 /* CDVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 41C49CF34E334F20B26F71AF /* CDVLogger.m */; };
 		D7A3DCAC3DFC4BB5B0C22A15 /* ActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EECA73653FC42F8825606B2 /* ActionSheet.m */; };
 		E4170A01155049D5A554503B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5547CA7B62D34B0FA597B84D /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		96F87063BACD48BD9FDAB56E /* CDVVibration.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AEE52D471646CF9DA1B8A8 /* CDVVibration.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +122,8 @@
 		EB87FDF31871DA8E0020F90C /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../../www; sourceTree = "<group>"; };
 		EB87FDF41871DAF40020F90C /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = ../../config.xml; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = Portfolio/config.xml; sourceTree = "<group>"; };
+		94AEE52D471646CF9DA1B8A8 /* CDVVibration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVVibration.m"; path = "org.apache.cordova.vibration/CDVVibration.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		3D314FCB860D400F86BC427A /* CDVVibration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVVibration.h"; path = "org.apache.cordova.vibration/CDVVibration.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +235,8 @@
 				C8CDC3A5646C4131AB9A2296 /* CDVDevice.h */,
 				E7BC6A23508D4236A606477D /* CDVNotification.m */,
 				9702F767F9AE437B887DC44F /* CDVNotification.h */,
+				94AEE52D471646CF9DA1B8A8 /* CDVVibration.m */,
+				3D314FCB860D400F86BC427A /* CDVVibration.h */,
 			);
 			name = Plugins;
 			path = Portfolio/Plugins;
@@ -427,6 +432,7 @@
 				D6EB4A2927D34954AE1137F3 /* CDVLogger.m in Sources */,
 				92A66B54BFF5486AB694AFB1 /* CDVDevice.m in Sources */,
 				13E5317024594F1EACA7429E /* CDVNotification.m in Sources */,
+				96F87063BACD48BD9FDAB56E /* CDVVibration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

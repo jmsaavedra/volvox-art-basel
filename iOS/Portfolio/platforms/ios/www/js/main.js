@@ -49,23 +49,25 @@ app.phonegap = (function() {
                         _this.actionSheet();
                     } 
                     else {
-                        // console.log('vibrating');
-                        // navigator.notification.vibrate();
+                        navigator.notification.vibrate(2500);
+                        // function wrongPw(btn){
+                        //     console.log('clicked btn: '+btn);
+                        //     if(btn === 1) passwordGate();
+                        //     else window.location.reload();
+                        // }
+
+                        /*** KEYBOARD BUG -- IT POPS UP AGAIN AFTER CLOSING ALERT ****/
+                        // navigator.notification.confirm(
+                        //     'Wrong password!', // message
+                        //      wrongPw,            // callback to invoke with index of button pressed
+                        //     'Sorry',           // title
+                        //     ['Try Again','Close']         // buttonLabels
+                        // );
+                        
                     }
                 });
             }
         );
-    };
-
-    var sorryWrongPw = function(){
-        alert('Sorry, wrong password.', function(){
-            console.log('wrong pass');
-        });
-        // navigator.notification.alert('Sorry, wrong password.', function(){
-        //     setTimeout(function(){
-        //         // window.location.reload();
-        //     });
-        // }, 'Sorry', 'OK');
     };
 
     var actionSheet = function() {

@@ -50,19 +50,19 @@ app.phonegap = (function() {
                     } 
                     else {
                         navigator.notification.vibrate(2500);
-                        // function wrongPw(btn){
-                        //     console.log('clicked btn: '+btn);
-                        //     if(btn === 1) passwordGate();
-                        //     else window.location.reload();
-                        // }
+                        function wrongPw(btn){
+                            console.log('clicked btn: '+btn);
+                            if(btn === 1) passwordGate();
+                            else window.location.reload();
+                        }
 
                         /*** KEYBOARD BUG -- IT POPS UP AGAIN AFTER CLOSING ALERT ****/
-                        // navigator.notification.confirm(
-                        //     'Wrong password!', // message
-                        //      wrongPw,            // callback to invoke with index of button pressed
-                        //     'Sorry',           // title
-                        //     ['Try Again','Close']         // buttonLabels
-                        // );
+                        navigator.notification.confirm(
+                            'Wrong password!', // message
+                             wrongPw,            // callback to invoke with index of button pressed
+                            'Sorry',           // title
+                            ['Try Again','Close']         // buttonLabels
+                        );
                         
                     }
                 });

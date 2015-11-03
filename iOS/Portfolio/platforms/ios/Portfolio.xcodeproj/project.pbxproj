@@ -19,7 +19,6 @@
 		3088BBBF154F3926009F9C59 /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3088BBB9154F3926009F9C59 /* Default-Portrait@2x~ipad.png */; };
 		3088BBC0154F3926009F9C59 /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 3088BBBA154F3926009F9C59 /* Default-Portrait~ipad.png */; };
 		3088BBC1154F3926009F9C59 /* Default@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3088BBBB154F3926009F9C59 /* Default@2x~iphone.png */; };
-		3088BBC2154F3926009F9C59 /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 3088BBBC154F3926009F9C59 /* Default~iphone.png */; };
 		308D05371370CCF300D202BF /* icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 308D052E1370CCF300D202BF /* icon-72.png */; };
 		308D05381370CCF300D202BF /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 308D052F1370CCF300D202BF /* icon.png */; };
 		308D05391370CCF300D202BF /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 308D05301370CCF300D202BF /* icon@2x.png */; };
@@ -41,12 +40,13 @@
 		7E7966E61810823500FA85AD /* icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7966DC1810823500FA85AD /* icon-small.png */; };
 		7E7966E71810823500FA85AD /* icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E7966DD1810823500FA85AD /* icon-small@2x.png */; };
 		92A66B54BFF5486AB694AFB1 /* CDVDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C66A461FFCA4F829650F6CC /* CDVDevice.m */; };
+		96F87063BACD48BD9FDAB56E /* CDVVibration.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AEE52D471646CF9DA1B8A8 /* CDVVibration.m */; };
 		C0245F7ACF84480181B305AC /* CDVSpinnerDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 79102AB469CB493C813D7FE1 /* CDVSpinnerDialog.m */; };
-		D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */; };
 		D6EB4A2927D34954AE1137F3 /* CDVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 41C49CF34E334F20B26F71AF /* CDVLogger.m */; };
 		D7A3DCAC3DFC4BB5B0C22A15 /* ActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EECA73653FC42F8825606B2 /* ActionSheet.m */; };
+		E22AB1061BE8817700316F82 /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = E22AB1051BE8817700316F82 /* Default-568h@2x~iphone.png */; };
+		E22AB1081BE881C800316F82 /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = E22AB1071BE881C800316F82 /* Default~iphone.png */; };
 		E4170A01155049D5A554503B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5547CA7B62D34B0FA597B84D /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		96F87063BACD48BD9FDAB56E /* CDVVibration.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AEE52D471646CF9DA1B8A8 /* CDVVibration.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,7 +85,6 @@
 		3088BBB9154F3926009F9C59 /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
 		3088BBBA154F3926009F9C59 /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		3088BBBB154F3926009F9C59 /* Default@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x~iphone.png"; sourceTree = "<group>"; };
-		3088BBBC154F3926009F9C59 /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~iphone.png"; sourceTree = "<group>"; };
 		308D052E1370CCF300D202BF /* icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72.png"; sourceTree = "<group>"; };
 		308D052F1370CCF300D202BF /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		308D05301370CCF300D202BF /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
@@ -95,6 +94,7 @@
 		30C1856519D5FC0A00212699 /* icon-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-60@3x.png"; sourceTree = "<group>"; };
 		30FC414816E50CA1004E6F35 /* icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-72@2x.png"; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Portfolio-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Portfolio-Prefix.pch"; sourceTree = "<group>"; };
+		3D314FCB860D400F86BC427A /* CDVVibration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVVibration.h; path = org.apache.cordova.vibration/CDVVibration.h; sourceTree = "<group>"; };
 		41C49CF34E334F20B26F71AF /* CDVLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDVLogger.m; path = org.apache.cordova.console/CDVLogger.m; sourceTree = "<group>"; };
 		4B4FD3BF32294697B7CDCC41 /* CDVLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVLogger.h; path = org.apache.cordova.console/CDVLogger.h; sourceTree = "<group>"; };
 		5547CA7B62D34B0FA597B84D /* AudioToolbox.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -112,18 +112,18 @@
 		7E7966DC1810823500FA85AD /* icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small.png"; sourceTree = "<group>"; };
 		7E7966DD1810823500FA85AD /* icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-small@2x.png"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Portfolio-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Portfolio-Info.plist"; path = "../Portfolio-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		94AEE52D471646CF9DA1B8A8 /* CDVVibration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDVVibration.m; path = org.apache.cordova.vibration/CDVVibration.m; sourceTree = "<group>"; };
 		9702F767F9AE437B887DC44F /* CDVNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVNotification.h; path = org.apache.cordova.dialogs/CDVNotification.h; sourceTree = "<group>"; };
 		9EECA73653FC42F8825606B2 /* ActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ActionSheet.m; path = "nl.x-services.plugins.actionsheet/ActionSheet.m"; sourceTree = "<group>"; };
 		C6EE0D6370DB46F08347213F /* ActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ActionSheet.h; path = "nl.x-services.plugins.actionsheet/ActionSheet.h"; sourceTree = "<group>"; };
 		C8CDC3A5646C4131AB9A2296 /* CDVDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDVDevice.h; path = org.apache.cordova.device/CDVDevice.h; sourceTree = "<group>"; };
-		D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
+		E22AB1051BE8817700316F82 /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
+		E22AB1071BE881C800316F82 /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~iphone.png"; sourceTree = "<group>"; };
 		E7BC6A23508D4236A606477D /* CDVNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDVNotification.m; path = org.apache.cordova.dialogs/CDVNotification.m; sourceTree = "<group>"; };
 		EB87FDF21871DA7A0020F90C /* merges */ = {isa = PBXFileReference; lastKnownFileType = folder; name = merges; path = ../../merges; sourceTree = "<group>"; };
 		EB87FDF31871DA8E0020F90C /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../../www; sourceTree = "<group>"; };
 		EB87FDF41871DAF40020F90C /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = ../../config.xml; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = Portfolio/config.xml; sourceTree = "<group>"; };
-		94AEE52D471646CF9DA1B8A8 /* CDVVibration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVVibration.m"; path = "org.apache.cordova.vibration/CDVVibration.m"; sourceTree = "<group>"; fileEncoding = 4; };
-		3D314FCB860D400F86BC427A /* CDVVibration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVVibration.h"; path = "org.apache.cordova.vibration/CDVVibration.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,16 +267,16 @@
 		308D05311370CCF300D202BF /* splash */ = {
 			isa = PBXGroup;
 			children = (
+				E22AB1051BE8817700316F82 /* Default-568h@2x~iphone.png */,
 				30B4F2FD19D5E07200D9F7D8 /* Default-667h.png */,
 				30B4F2FE19D5E07200D9F7D8 /* Default-736h.png */,
 				30B4F2FF19D5E07200D9F7D8 /* Default-Landscape-736h.png */,
-				D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */,
 				3088BBB7154F3926009F9C59 /* Default-Landscape@2x~ipad.png */,
 				3088BBB8154F3926009F9C59 /* Default-Landscape~ipad.png */,
 				3088BBB9154F3926009F9C59 /* Default-Portrait@2x~ipad.png */,
 				3088BBBA154F3926009F9C59 /* Default-Portrait~ipad.png */,
 				3088BBBB154F3926009F9C59 /* Default@2x~iphone.png */,
-				3088BBBC154F3926009F9C59 /* Default~iphone.png */,
+				E22AB1071BE881C800316F82 /* Default~iphone.png */,
 			);
 			path = splash;
 			sourceTree = "<group>";
@@ -380,6 +380,7 @@
 				7E7966E31810823500FA85AD /* icon-60@2x.png in Resources */,
 				7E7966E61810823500FA85AD /* icon-small.png in Resources */,
 				3088BBBD154F3926009F9C59 /* Default-Landscape@2x~ipad.png in Resources */,
+				E22AB1081BE881C800316F82 /* Default~iphone.png in Resources */,
 				3088BBBE154F3926009F9C59 /* Default-Landscape~ipad.png in Resources */,
 				3088BBBF154F3926009F9C59 /* Default-Portrait@2x~ipad.png in Resources */,
 				7E7966E71810823500FA85AD /* icon-small@2x.png in Resources */,
@@ -388,13 +389,12 @@
 				7E7966DE1810823500FA85AD /* icon-40.png in Resources */,
 				3088BBC1154F3926009F9C59 /* Default@2x~iphone.png in Resources */,
 				7E7966E21810823500FA85AD /* icon-60.png in Resources */,
-				3088BBC2154F3926009F9C59 /* Default~iphone.png in Resources */,
-				D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */,
 				30B4F30219D5E07200D9F7D8 /* Default-Landscape-736h.png in Resources */,
 				30C1856619D5FC0A00212699 /* icon-60@3x.png in Resources */,
 				7E7966E11810823500FA85AD /* icon-50@2x.png in Resources */,
 				7E7966E51810823500FA85AD /* icon-76@2x.png in Resources */,
 				30FC414916E50CA1004E6F35 /* icon-72@2x.png in Resources */,
+				E22AB1061BE8817700316F82 /* Default-568h@2x~iphone.png in Resources */,
 				67956E3262F04162A231F2A2 /* CDVNotification.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
